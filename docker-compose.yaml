@@ -1,0 +1,45 @@
+#docker-compose build --build-arg username="my-user" --build-arg password="my-pass"
+
+version: '3.6'
+
+volumes:
+  minio-data:
+
+services:
+
+  server:
+    build: ./server
+    ports:
+      - "5001:5001"
+    environment:
+      - API_KEY=TEST_KEY
+      - ACCESS_KEY=minioadmin
+      - SECRET_KEY=minioadmin
+      - BUCKET_NAME=test
+      - ENDPOINT_URL=http://minio:9000
+      - FLASK_SECRET_KEY=supersecretkey
+    volumes:
+      - ./server/assets:/app/assets
+
+  web:
+    build: ./web
+    ports:
+      - "3000:3000"
+    environment:
+      - API_KEY=TEST_KEY
+      - ADMIN_USER=test
+      - ADMIN_PASS=test123
+      - NEXTAUTH_SECRET=test321
+      - BACKEND_URL=http://server:5001
+
+  minio:
+    image: quay.io/minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio-data:/data
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
