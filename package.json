@@ -1,0 +1,53 @@
+{
+  "name": "gridsight",
+  "productName": "GridSight",
+  "version": "1.0.1",
+  "description": "My Electron application description",
+  "main": ".webpack/main",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "keywords": [],
+  "author": {
+    "name": "Micah Webb",
+    "email": "105076850+micahpw-nrel@users.noreply.github.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.22.5",
+    "@babel/preset-react": "^7.22.5",
+    "@electron-forge/cli": "^6.1.1",
+    "@electron-forge/maker-deb": "^6.1.1",
+    "@electron-forge/maker-rpm": "^6.1.1",
+    "@electron-forge/maker-squirrel": "^6.1.1",
+    "@electron-forge/maker-zip": "^6.1.1",
+    "@electron-forge/plugin-webpack": "^6.1.1",
+    "@vercel/webpack-asset-relocator-loader": "1.7.3",
+    "babel-loader": "^9.1.2",
+    "css-loader": "^6.0.0",
+    "electron": "^25.2.0",
+    "node-loader": "^2.0.0",
+    "style-loader": "^3.0.0"
+  },
+  "dependencies": {
+    "@electron-forge/maker-flatpak": "^6.2.1",
+    "copy-webpack-plugin": "^11.0.0",
+    "deck.gl": "^8.9.18",
+    "electron-squirrel-startup": "^1.0.0",
+    "file-saver": "^2.0.5",
+    "multiselect-react-dropdown": "^2.0.25",
+    "nebula.gl": "^1.0.4",
+    "nodejs-polars": "^0.8.0",
+    "plotly": "^1.0.6",
+    "plotly.js": "^2.24.2",
+    "rc-slider": "^10.2.1",
+    "react": "^18.2.0",
+    "react-datetime-picker": "^5.2.0",
+    "react-dom": "^18.2.0",
+    "react-plotly.js": "^2.6.0"
+  }
+}
