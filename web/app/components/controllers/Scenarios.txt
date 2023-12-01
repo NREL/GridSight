@@ -1,0 +1,45 @@
+
+
+
+
+function ScenarioPicker(allProjects, selectedProject, onProjectSelect, allScenarios, selectedScenario, onScenarioSelect, visible=true){
+
+
+
+    return (
+        <>
+        {visible &&
+        <div>
+        <div>
+          Projects
+            <Multiselect
+          id='ProjectSelect'
+          class="MultiSelect"
+          singleSelect={true}
+          options={allProjects} // Options to display in the dropdown
+          selectedValues={project} // Preselected value to persist in dropdown
+          onSelect={(values) => updateProject(values)} // Function will trigger on select event
+          onRemove={(values) => updateProject(values)} // Function will trigger on remove event
+          displayValue="name" // Property name to display in the dropdown options
+            />
+        </div>
+        <div>
+          Scenarios
+            <Multiselect
+          id='ScenarioSelect'
+          class="MultiSelect"
+          singleSelect={true}
+          options={allScenarios} // Options to display in the dropdown
+          selectedValues={scenario} // Preselected value to persist in dropdown
+          onSelect={(values) => updateScenario(values)} // Function will trigger on select event
+          onRemove={(values) => updateScenario(values)} // Function will trigger on remove event
+          displayValue="name" // Property name to display in the dropdown options
+            />
+            </div>
+        </div>
+        }
+        </>
+
+    )
+
+}

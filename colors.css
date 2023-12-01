@@ -1,0 +1,37 @@
+#id {
+    background-color: rgb(93, 110, 141)
+}
+
+
+
+#Nuclear {color:rgb(130, 0, 0)}
+#Coal {color:rgb(34, 34, 34)}
+#Steam-Turbine {color:rgb(34, 34, 35)}
+#Gas-CC {color:rgb(82, 33, 107)}
+#Combined-Cycle-Gas-Turbine {color:rgb(82, 33, 107)}
+#Gas-CC-CCS {color:rgb(94, 22, 136)}
+#Gas-CT {color:rgb(194, 161, 219)}
+#Gas {color:rgb(194, 161, 219)}
+#Combustion-Turbine {color:rgb(194, 161, 219)}
+#Dual-Fuel {color:rgb(0, 0, 128)}
+#Oil-Gas-Steam {color:rgb(61, 51, 118)}
+#Oil {color:rgb(61, 51, 118)}
+#Hydro {color:rgb(24, 127, 148)}
+#Ocean {color:rgb(0, 0, 128)}
+#Geothermal {color:rgb(169, 98, 53)}
+#Landfill-Gas {color:rgb(91, 152, 68)}
+#Biopower {color:rgb(91, 152, 68)}
+#VRE {color:rgb(127, 195, 64)}
+#Wind {color:rgb(0, 182, 239)}
+#CSP {color:rgb(252, 118, 26)}
+#PV {color:rgb(255, 201, 3)}
+#PV-Battery {color:rgb(209, 194, 2)}
+#OSW-Battery {color:rgb(155, 1, 79)}
+#dPV {color:rgb(255, 171, 2)}
+#Battery {color:rgb(255, 74, 136)}
+#Storage {color:rgb(255, 74, 136)}
+#Other {color:rgb(255, 127, 187)}
+#Net-Imports {color:rgb(39, 98, 196)}
+#Curtailment {color:rgb(225, 225, 225)}
+#Offshore-Wind {color:rgb(16, 107, 167)}
+#paperBGCOlor {color:rgb(150, 150, 150)}

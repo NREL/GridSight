@@ -1,0 +1,38 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "autoprefixer": "10.4.14",
+    "chart.js": "^4.4.0",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "chartjs-plugin-zoom": "^2.0.1",
+    "date-fns": "^2.30.0",
+    "deck.gl": "^8.9.19",
+    "eslint": "8.44.0",
+    "eslint-config-next": "13.4.9",
+    "file-saver": "^2.0.5",
+    "hammerjs": "^2.0.8",
+    "multiselect-react-dropdown": "^2.0.25",
+    "nebula.gl": "^1.0.4",
+    "next": "13.4.9",
+    "next-auth": "^4.22.1",
+    "postcss": "8.4.25",
+    "rc-slider": "^10.2.1",
+    "react": "18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "18.2.0",
+    "swr": "^2.2.0",
+    "tailwindcss": "3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "20.4.1",
+    "typescript": "5.1.6"
+  }
+}

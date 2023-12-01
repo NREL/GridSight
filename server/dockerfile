@@ -1,0 +1,29 @@
+ARG APP_DIR="/app"
+
+FROM python:3.11-slim-bullseye
+
+RUN apt update && apt-get install -y build-essential
+
+# Include global args in this stage of the build
+ARG APP_DIR
+
+
+ENV PROJ_DIR=/usr/local
+
+# Copy function code
+RUN mkdir -p ${APP_DIR}
+
+# Set working directory to function root directory
+WORKDIR ${APP_DIR}
+
+# Install python dependencies
+COPY requirements.txt /requirements.txt
+
+RUN pip install -r /requirements.txt && rm /requirements.txt
+
+# Copy my app stuff to the image
+COPY . ${APP_DIR}/
+
+ENV PYTHONPATH=${APP_DIR}/
+
+CMD ["uwsgi", "--http", "0.0.0.0:5001", "-w", "wsgi:app"]

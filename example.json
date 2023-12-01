@@ -1,0 +1,38 @@
+{
+    "id": "some unique id",
+    "metadata": {
+        "title": "some scenario title"
+    },
+    "map-datasets":[
+        {"title": "nodal-transmission",
+         "coset": {
+            "geojson": {"path": "path to geojson", "backend":"s3"},
+            "timeseries": {"path": "path to timeseries", "backend":"s3"}
+         },
+         "style":{}
+        },
+        {
+            "title": "nodal generation",
+            "coset": {
+                "geojson": {"path": "path to generation geojson"},
+                "timeseries":{"path": "path to timeseries", "backend":"s3"}
+            },
+            "style":{}
+        },
+        {
+            "title": "zonal-transmission",
+            "coset":{
+                "geojson": {"path": "path to zonal geo", "backend":"s3"},
+                "timeseries": {"path": "path to zonal timeseries", "backend":"s3"}
+            }
+        }
+    ],
+    "plot-datasets":[
+        {"title": "ISO dispatch",
+        "dataset": {
+            "path": "path to timeseries dataset"
+        }
+        }
+    ]
+}
+

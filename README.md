@@ -1,20 +1,15 @@
-# GridSight
+# GridSight-Web
+A Web based version of GridSight
 
-A Electron app utilizing deck.gl to visualize large scale grid systems.
+## Self Service
+
+Follow the self-service.MD file on instructions for uploading new scenarios to GridSight.
+[Here](docs/tutorials/self-service.MD)
+
+# Development and Testing Setup
+
+To set up you will need **python3** and **node** installed locally.
+
+Run `docker-compose build` and `docker-compose up`
 
 
-# Contributing
-
-Install nodejs which also installs npm
-
-Install Yarn package manager
-
-`npm install --global yarn`
-
-Install electron-forge
-
-`yarn add --save-dev @electron-forge/cli`
-
-Copy files into /layers directory
-
-Run `yarn start`

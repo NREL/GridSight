@@ -1,0 +1,7 @@
+flask
+flask-rebar
+polars
+pandas
+uwsgi
+python-dotenv
+s3fs

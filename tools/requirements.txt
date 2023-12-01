@@ -1,0 +1,6 @@
+pandas
+geopandas
+shapely
+matplotlib
+openpyxl
+git+https://github.com/NREL/Marmot.git@70-incorporate-quickplots-and-scenariohandlers-modules-into-marmot

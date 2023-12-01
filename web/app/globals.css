@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+
+#controller {
+  background-color: #F5F5F5;
+  min-width: 300px;;
+  width: 15%;
+  height: auto;
+  margin-top: 1%;
+  margin-left: 1%;
+  display: block grid;
+  border-radius: 8px;
+}
+
+#showFilters {
+  width: 98%;
+  margin: 1%;
+  height: 25px;
+}
+
+
+#dateController {
+  background-color: rgb(170, 170, 187);
+
+  display: grid;
+  margin-top: 2%;
+  margin-right: 1%;
+
+
+}
+
+#AnimationOptions {
+  display: block grid;
+}
+
+
+.MultiSelect {
+  width: 99%;
+  margin-top: 1%;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+.FilterText {
+  text-align: center;
+  width: 90%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+#CurrentDateTime{
+  color:rgb(0, 0, 0);
+  text-align: center;
+  font-size: x-large;
+}
+
+.button {
+  border-radius: 8px;
+  border-style: none;
+  background-color: rgb(190, 198, 202);
+  margin: 1%;
+  font-size:medium;
+}
+
+.button:hover {
+  background-color: #5759c5; /* Green */
+  color: white;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+
+.playback-button {
+  border-radius: 8px;
+  background-color: rgb(190, 198, 202);
+  border-style: none;
+  margin: 1%;
+  font-size: large;
+}
+.playback-button:hover {
+  background-color: #5759c5; /* Green */
+  color: white;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+
+
+
+#filterOptions {
+  display: grid;
+}
+
+#clearColor {
+  color:rgb(173, 216, 230)
+}
+
+#playback-controller {
+  text-align: center;
+  align-content: center;
+}
+
+#Actions {
+  display: block;
+}
+
+#curt {
+  color: rgb(225, 225, 225);
+}
+
+.colormap {
+  height: 20px;
+  width:20px;
+}
