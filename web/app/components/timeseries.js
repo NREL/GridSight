@@ -289,7 +289,7 @@ export default function Timeseries({index, project, scenario, visible, selected}
 
     useEffect(() => {
 
-      getTimeSeries(project, scenario, 'power_flow_actual_superzone.pq.gz').then(data => {updateData(data);})
+      getTimeSeries(project, scenario, 'zone_flow.pq.gz').then(data => {updateData(data);})
 
     }, [scenario])
 

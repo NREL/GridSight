@@ -17,7 +17,7 @@ function getData(url){
 }
 
 
-class layerBufferObject {
+class livelayer {
     // Goal: have an object responsible for buffering time series and pre-computing
     // attribute values.
 
@@ -34,6 +34,19 @@ class layerBufferObject {
     // Compiled Kernels
     constructor(project, scenario){
 
+        this.layer_id = "" // unique id for deck gl
+
+        this.data_buffer = {} // a dictionary of timestamps for keys and float32 arrays for values
+
+        this.color_buffer = {} // a dictionary of timestamps for keys and arrays of calculated colors for
+
+        this.filter_buffer = {} // timestamps and boolean array for what should be showing
+
+        this.size_buffer = {} //timestamps as keys and float32 array of size values / luma gl buffer of values
+
+        this.deck_layer = "" // a deck gl layer that is created and coupled to the objects data
+
+        this.current_values ={}
         // raw data buffer
 
         // Luma gl buffer

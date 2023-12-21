@@ -69,9 +69,9 @@ def getDispatchMeta(project, scenario):
     max_demand = 0
     if 'Demand' in technologies:
 
-        max_demand = dispatch_df.swaplevel(0,1, axis=1)['Demand'].max().to_dict()
+        max_demand = dispatch_df['Demand'].max().to_dict()
 
-    max_dispatch = dispatch_df.swaplevel(0,1, axis=1)[[col for col in technologies if col != 'Demand']].T.groupby(level='Entity').sum().T.max().to_dict()
+    max_dispatch = dispatch_df[[col for col in technologies if col != 'Demand']].T.groupby(level='Entity').sum().T.max().to_dict()
 
     meta = {
         'entities': list(entities),
@@ -91,7 +91,8 @@ def getDispatchTimestep(project, scenario, index):
 
     dispatch_df = s3handler.get_pickle(project, scenario, 'dispatch.pickle.gz')
 
-    result = dispatch_df.iloc[index].unstack().fillna(0.0).to_json().replace('\\','')
+    result = dispatch_df.iloc[index].groupby(level=['Technology', 'Entity']).sum().unstack().fillna(0.0).T.to_json().replace('\\','')
+    #result = dispatch_df.iloc[index].unstack().fillna(0.0).to_json().replace('\\','')
 
     return json.dumps(result)
 
@@ -224,7 +225,7 @@ def getGeoFile(project, scenario, filename):
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ['FLASK_SECRET_KEY']
-app.config['MAX_CONTENT_LENGTH'] = 1000 * 1000 * 1000 #~1GB
+app.config['MAX_CONTENT_LENGTH'] = 1000 * 1000 * 2000 #~2GB
 rebar.init_app(app)
 
 

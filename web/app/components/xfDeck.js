@@ -208,7 +208,7 @@ export function DeckApp() {
         setData(data)
         var currentTime = 0
         if ('DateTime' in data['generation']){
-         var currentTime = data['generation']['DateTime'].split('.')[0]
+          var currentTime = data['generation']['DateTime'].split('.')[0]
         }
         else if ('Timestamp' in data['generation']){
           var currentTime = data['generation']['Timestamp'].split('.')[0]

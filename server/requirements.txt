@@ -1,7 +1,9 @@
 flask
 flask-rebar
 polars
-pandas
+fsspec
+pandas>=2.0
+pyarrow
 uwsgi
 python-dotenv
 s3fs

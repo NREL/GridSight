@@ -19,6 +19,14 @@ class S3Handler:
             endpoint_url=endpoint_url
         )
 
+        #if endpoint_url == 'http://minio:9000':
+        #    endpoint_url = 'http://127.0.0.1:9000'
+
+        self.storage_options = {
+            'key':key,
+            'secret':secret,
+            'client_kwargs':{'endpoint_url':endpoint_url}
+        }
         print(self.list_projects())
 
 
@@ -56,14 +64,13 @@ class S3Handler:
     @lru_cache(maxsize=10)
     def get_dataframe(self, project, scenario, file_name):
 
-
         with self.s3.open(f"{self.bucket_name}/{project}/{scenario}/timeseries/{file_name}", 'rb') as f:
+            df = pd.read_parquet(f).reset_index()
+            df_polars = pl.from_pandas(df)
+            if "DateTime" in df_polars.columns:
+                df_polars = df_polars.with_columns([pl.col("DateTime").cast(pl.Utf8)])
 
-            df = pl.read_parquet(f)
-            if "DateTime" in df.columns:
-                df = df.with_columns([pl.col("DateTime").cast(pl.Utf8)])
-
-            return df
+            return df_polars
 
 
     @lru_cache(maxsize=10)
