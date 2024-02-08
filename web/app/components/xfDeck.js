@@ -1,11 +1,13 @@
 'use client';
 import DeckGL from '@deck.gl/react';
+import {StaticMap} from 'react-map-gl';
+import {BASEMAP} from '@deck.gl/carto';
 import { SelectionLayer } from '@nebula.gl/layers';
 import React, {useState, useEffect} from 'react';
 import Multiselect from 'multiselect-react-dropdown';
 
 import * as transformations from '../lib/transformations';
-import {create_gen_layer, create_state_layer, create_trx_layer, create_vre_layer, create_zone_layer, test_arc_layer, create_trx_arc_layer} from '../lib/layer_generators';
+import {create_gen_layer, create_state_layer, create_vre_layer, create_zone_layer, create_trx_arc_layer} from '../lib/layer_generators';
 
 //import Colorbar from './colormap';
 import { saveAs } from 'file-saver';
@@ -162,43 +164,51 @@ export function DeckApp() {
 
 
     //Transmission Filters and Styling
-    const [showTRXFilters, updateTRXFilters] = useState(false);
-    const [showTRXLayer, updateShowTRXLayer] = useState(true);
-    const [loadingFilter, updateLoadingFilter] = useState(0.0);
-    const [lineWidthSlider, updateLineWidthScale] = useState(5.0)
-    const [opacityTRX, updateOpacityTRX] = useState(0.5)
 
-    const [showFlow, updateShowFlow] = useState(false);
+    const [trxStyling, updateTRXStyling] = useState({
+      showFilters: false,
+      visible: true,
+      showFlow: false,
+      minLoading:0.0,
+      widthScale: 5.0,
+      opacity: 0.5,
+      minWidth: 0,
+      maxWidth: 1000
+
+    })
+
+
     function toggleFlow() {
-      updateShowFlow(showFlow => !showFlow);
+      updateTRXStyling({...trxStyling, showFlow: !trxStyling.showFlow})
+
     }
     function toggleTRXLayer() {
-      updateShowTRXLayer(showTRXLayer => !showTRXLayer )
+      updateTRXStyling({...trxStyling, visible: !trxStyling.visible})
+      //updateShowTRXLayer(showTRXLayer => !showTRXLayer )
     }
-
-
 
     function toggleTRXFilters(){
-      updateTRXFilters(showTRXFilters => !showTRXFilters);
+      updateTRXStyling({...trxStyling, showFilters: !trxStyling.showFilters})
+      //updateTRXFilters(showTRXFilters => !showTRXFilters);
     }
 
-    //Generation Filter
-    const [showGenFilters, updateGenFilters] = useState(false);
-    const [showGenLayer, updateShowGenLayer] = useState(true);
-    const [radiusSlider, updateRadiusSlider] = useState(5.0)
-    const [opacitySlider, updateOpacitySlider] = useState(0.5)
-
+    //Generation Styling
+    const [generationStyling, updateGenStyling] = useState({
+      showFilters: false,
+      visible: true,
+      radiusScale: 5.0,
+      opacity: 0.5,
+      minRadius: 0,
+      maxRadius: 1000
+    })
 
     function toggleGenFilters(){
-      updateGenFilters(showGenFilters => !showGenFilters);
+      updateGenStyling({...generationStyling, showFilters: !generationStyling.showFilters})
     }
-
     function toggleGenLayer(){
-      updateShowGenLayer(showGenLayer=> !showGenLayer);
+      updateGenStyling({...generationStyling, visible: !generationStyling.visible})
+
     }
-
-
-
 
     useEffect(() => {
       //setLoading(true)
@@ -375,9 +385,9 @@ export function DeckApp() {
     const zone_layer = create_zone_layer(ZONES);
     //const trx_layer = create_trx_layer(TRX, DATA, voltageFlags, lineWidthSlider, loadingFilter, frameRate )
 
-    const trx_layer = create_trx_arc_layer(TRX, DATA, voltageFlags, lineWidthSlider, opacityTRX, loadingFilter, frameRate, showFlow, showTRXLayer, onTRXClick )
-    const vre_layer = create_vre_layer(VRE, DATA, selectedGenSet, radiusSlider, opacitySlider, frameRate, showGenLayer)
-    const gen_layer = create_gen_layer(GEN, DATA, selectedGenSet, radiusSlider, opacitySlider, frameRate, showGenLayer)
+    const trx_layer = create_trx_arc_layer(TRX, DATA, voltageFlags, trxStyling, frameRate, onTRXClick )
+    const vre_layer = create_vre_layer(VRE, DATA, selectedGenSet,generationStyling, frameRate)
+    const gen_layer = create_gen_layer(GEN, DATA, selectedGenSet, generationStyling, frameRate)
 
 
 
@@ -418,7 +428,8 @@ export function DeckApp() {
     }
 
     // Layers
-    const layers = [states,zone_layer, trx_layer,vre_layer, gen_layer, select_layer]
+    //const layers = [states, zone_layer, trx_layer,vre_layer, gen_layer, select_layer]
+    const layers = [trx_layer,vre_layer, gen_layer, select_layer]
 
     return (
 
@@ -427,9 +438,11 @@ export function DeckApp() {
         initialViewState={INITIAL_VIEW_STATE}
         layers={layers }
         glOptions={{ preserveDrawingBuffer: true }}
-        parameters={{
-        clearColor: [0,0, 0.1, 1]
-      }}>
+        //parameters={{
+        //clearColor: [0,0, 0.1, 1]
+      //}}
+      >
+      <StaticMap mapStyle={BASEMAP.VOYAGER_NOLABELS} />
 
       <div id='Dispatch' onMouseEnter={()=>updateOutsideFilter(false)} onMouseLeave={()=>updateOutsideFilter(true)}>
         <Dispatch index={index} project={project} scenario={scenario} visible={showDispatch}/>
@@ -492,7 +505,7 @@ export function DeckApp() {
         <button id="showGenFilters" class='button' onClick={()=> toggleGenFilters()}>
           Generation Filters
         </button>
-        { showGenFilters &&
+        { generationStyling.showFilters &&
         <div class="FilterText">
           Generation Filter
         <Multiselect
@@ -507,22 +520,33 @@ export function DeckApp() {
 
 
         <div id='radius-scale' class='FilterText' >
-          Scale = {radiusSlider}
-          <Slider min={0} max={20} defaultValue={radiusSlider} step={0.1}
-           onChange={(nextValues) => {updateRadiusSlider(nextValues)
-          }} />
+          Scale = {generationStyling.radiusScale}
+          <Slider min={0} max={20} defaultValue={generationStyling.radiusScale} step={0.1}
+           onChange={(nextValues) => updateGenStyling({...generationStyling, radiusScale:nextValues})} />
         </div>
 
         <div id='radius-scale' class='FilterText' >
-          Opacity = {opacitySlider}
-          <Slider min={0} max={1} defaultValue={opacitySlider} step={0.01}
-           onChange={(nextValues) => {updateOpacitySlider(nextValues)
-          }} />
+          Opacity = {generationStyling.opacity}
+          <Slider min={0} max={1} defaultValue={generationStyling.opacity} step={0.01}
+           onChange={(nextValues) => {updateGenStyling({...generationStyling, opacity:nextValues})}} />
         </div>
 
         <div id='GenCheckbox' className='LayerCheckbox'>
             Show Layer
-            <input type='checkbox' checked={showGenLayer} onChange={()=>toggleGenLayer()}/>
+            <input type='checkbox' checked={generationStyling.visible} onChange={()=>toggleGenLayer()}/>
+        </div>
+
+        <div id = 'MinMaxRadius' className='minmax'>
+          <div>
+            Min Radius
+            <input type='number' id='minRadiusInput' onChange={e=>updateGenStyling({...generationStyling, minRadius: Number(e.target.value)})} min={0} />
+          </div>
+
+          <div>
+            Max Radius
+            <input type='number' id='maxRadiusInput' onChange={e=>updateGenStyling({...generationStyling, maxRadius: Number(e.target.value)})} min={generationStyling.minRadius} />
+          </div>
+
         </div>
 
         </div>
@@ -532,7 +556,7 @@ export function DeckApp() {
         <button id="showTRXFilters" class='button' onClick={()=> toggleTRXFilters()}>
           Transmission Filters
         </button>
-        {showTRXFilters &&
+        {trxStyling.showFilters &&
         <div id = "TRXFilters">
         <div class="FilterText">
           Voltage Filter
@@ -547,36 +571,50 @@ export function DeckApp() {
         />
         </div>
         <div id='loading-filter' class='FilterText' >
-          Loading {'>'}= {loadingFilter}
-          <Slider min={0} max={1} defaultValue={loadingFilter} step={0.01}
-           onChange={(nextValues) => {updateLoadingFilter(nextValues)
+          Loading {'>'}= {trxStyling.minLoading}
+          <Slider min={0} max={1} defaultValue={trxStyling.minLoading} step={0.01}
+           onChange={(nextValues) => {updateTRXStyling({...trxStyling, minLoading: nextValues})
           }} />
         </div>
 
         <div id='linewidth-scale' class='FilterText' >
-          Scale = {lineWidthSlider}
-          <Slider min={0} max={20} defaultValue={lineWidthSlider} step={0.1}
-           onChange={(nextValues) => {updateLineWidthScale(nextValues)
+          Scale = {trxStyling.widthScale}
+          <Slider min={0} max={20} defaultValue={trxStyling.widthScale} step={0.1}
+           onChange={(nextValues) => {updateTRXStyling({...trxStyling, widthScale: nextValues})
           }} />
         </div>
 
         <div id='radius-scale' class='FilterText' >
-          Opacity = {opacityTRX}
-          <Slider min={0} max={1} defaultValue={opacityTRX} step={0.01}
-           onChange={(nextValues) => {updateOpacityTRX(nextValues)
+          Opacity = {trxStyling.opacity}
+          <Slider min={0} max={1} defaultValue={trxStyling.opacity} step={0.01}
+           onChange={(nextValues) => {updateTRXStyling({...trxStyling, opacity:nextValues})
           }} />
         </div>
 
         <div id='flowCheckbox' className='LayerCheckbox'>
           <div>
             Show Layer
-            <input type='checkbox' checked={showTRXLayer} onChange={()=>toggleTRXLayer()}/>
+            <input type='checkbox' checked={trxStyling.visible} onChange={()=>toggleTRXLayer()}/>
           </div>
           <div>
             Show Flow
-            <input type='checkbox' checked={showFlow} onChange={()=>toggleFlow()} />
+            <input type='checkbox' checked={trxStyling.showFlow} onChange={()=>toggleFlow()} />
           </div>
         </div>
+
+        <div id = 'MinMaxWidth' className='minmax'>
+          <div>
+            Min Width
+            <input type='number' id='minRadiusInput' onChange={e=>updateTRXStyling({...trxStyling, minWidth: Number(e.target.value)})} min={0} />
+          </div>
+
+          <div>
+            Max Width
+            <input type='number' id='maxRadiusInput' onChange={e=>updateTRXStyling({...trxStyling, maxWidth: Number(e.target.value)})} min={trxStyling.minRadius} />
+          </div>
+
+        </div>
+
         </div>
       }
         </div>
