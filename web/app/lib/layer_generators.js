@@ -38,7 +38,7 @@ function logTrxClick(object, DATA){
 
 
 
-export function create_vre_layer(GEO, DATA, selectedGenSet, radiusSlider, opacitySlider, frameRate, showLayer){
+export function create_vre_layer(GEO, DATA, selectedGenSet, styling, frameRate){
     // creates a scatter layer with
     // assumes curtailment will be
 
@@ -46,27 +46,27 @@ export function create_vre_layer(GEO, DATA, selectedGenSet, radiusSlider, opacit
         id: 'vre',
         data: GEO,
         filled: true,
-        visible: showLayer,
-        lineWidthScale: 250*radiusSlider,
+        visible: styling.visible,
+        lineWidthScale: 250*styling.radiusScale,
         lineWidthMinPixels: 0,
-        lineWidthMaxPixels: 500,
+        lineWidthMaxPixels: styling.maxRadius,
         //lineWidthUnits: 'pixels',
         getLineWidth: f => transformations.setGeneratorLineWidth(getDataValues(DATA, 'generation', f.properties.GEN_ID), getDataValues(DATA, 'curt', f.properties.GEN_ID), selectedGenSet[f.properties.TECH]),
         getLineColor: transformations.GEN_MAP['Curtailment'],
         getFillColor: f => transformations.setGeneratorColor(f.properties.TECH),
         getPointRadius: f => transformations.setGeneratorRadius(getDataValues(DATA, 'generation', f.properties.GEN_ID), getDataValues(DATA, 'curt', f.properties.GEN_ID), selectedGenSet[f.properties.TECH]),
-        pointRadiusScale: 250*radiusSlider,
-        pointRadiusMinPixels: 0,
-        pointRadiusMaxPixels: 500,
+        pointRadiusScale: 250*styling.radiusScale,
+        pointRadiusMinPixels: styling.minRadius,
+        pointRadiusMaxPixels: styling.maxRadius,
         //pointRadiusUnits:'pixels',
         pointType:'circle',
-        opacity: opacitySlider,
+        opacity: styling.opacity,
         pickable: true,
         autoHighlight: true,
         onClick: info => logGenClick(info.object, DATA),
         updateTriggers: {
-            getPointRadius: [DATA, selectedGenSet, radiusSlider],
-            getLineWidth: [DATA, selectedGenSet, radiusSlider],
+            getPointRadius: [DATA, selectedGenSet, styling.radiusScale],
+            getLineWidth: [DATA, selectedGenSet, styling.radiusScale],
 
         },
         transitions:{
@@ -87,7 +87,7 @@ export function create_vre_layer(GEO, DATA, selectedGenSet, radiusSlider, opacit
 }
 
 
-export function create_gen_layer(GEO, DATA, selectedGenSet, radiusSlider, opacitySlider, frameRate, showLayer){
+export function create_gen_layer(GEO, DATA, selectedGenSet, styling, frameRate){
 
     //like vre layer but no curtailment
 
@@ -95,21 +95,21 @@ export function create_gen_layer(GEO, DATA, selectedGenSet, radiusSlider, opacit
         id: 'gen',
         data: GEO,
         filled: true,
-        visible: showLayer,
+        visible: styling.visible,
         getFillColor: f => transformations.setGeneratorColor(f.properties.TECH),
         getLineColor: [255,255,255],
-        getLineWidth:1,
+        getLineWidth:0,
         getPointRadius: f => transformations.setGeneratorRadius(getDataValues(DATA, 'generation', f.properties.GEN_ID),0.0, selectedGenSet[f.properties.TECH]),
-        pointRadiusScale: 250*radiusSlider,
-        pointRadiusMinPixels: 0,
-        pointRadiusMaxPixels: 500,
+        pointRadiusScale: 250*styling.radiusScale,
+        pointRadiusMinPixels: styling.minRadius,
+        pointRadiusMaxPixels: styling.maxRadius,
         pointType:'circle',
-        opacity: opacitySlider,
+        opacity: styling.opacity,
         pickable: true,
         autoHighlight: true,
         onClick: info => logGenClick(info.object, DATA),
         updateTriggers: {
-            getPointRadius: [DATA, selectedGenSet, radiusSlider],
+            getPointRadius: [DATA, selectedGenSet, styling.radiusScale],
             //getLineWidth: [DATA, selectedGenSet, radiusSlider],
         },
         transitions:{
@@ -172,33 +172,33 @@ export function create_trx_layer(GEO, DATA,voltageFlags, lineWidthSlider, loadin
 
 
 
-export function create_trx_arc_layer(GEO, DATA,voltageFlags, lineWidthSlider, opcacityTRX, loadingFilter,  frameRate, showFlow, showLayer, onClickFunc ){
+export function create_trx_arc_layer(GEO, DATA,voltageFlags,styling, frameRate, onClickFunc ){
 
   if (GEO){
     const trx_layer = new ArcLayer({
       id: 'trx',
       data: GEO['features'],
-      visible: showLayer,
+      visible: styling.visible,
       filled: true,
       stroked: true,
-      widthScale: lineWidthSlider,
-      widthMinPixels: 0,
-      widthMaxPixels: 500,
+      widthScale: styling.widthScale,
+      widthMinPixels: styling.minWidth,
+      widthMaxPixels: styling.maxWidth,
       widthUnits: 'meters',
-      opacity: opcacityTRX,
+      opacity: styling.opacity,
       getSourcePosition: d=>d.geometry.coordinates[0],
       getTargetPosition: d=>d.geometry.coordinates[1],
 
-      getSourceColor: d=> transformations.setFlowColor(getDataValues(DATA, 'flow', d.properties.LINE_ID), d.properties.RATE, loadingFilter, -1.0, showFlow),// sets color based on loading and direction
-      getTargetColor: d=> transformations.setFlowColor(getDataValues(DATA, 'flow', d.properties.LINE_ID), d.properties.RATE, loadingFilter, 1.0, showFlow),
+      getSourceColor: d=> transformations.setFlowColor(getDataValues(DATA, 'flow', d.properties.LINE_ID), d.properties.RATE, styling.minLoading, -1.0, styling.showFlow),// sets color based on loading and direction
+      getTargetColor: d=> transformations.setFlowColor(getDataValues(DATA, 'flow', d.properties.LINE_ID), d.properties.RATE,  styling.minLoading, 1.0, styling.showFlow),
 
       getWidth: d => transformations.setLineWidth( getDataValues(DATA, 'flow', d.properties.LINE_ID), voltageFlags[d.properties.TO_VN]),
       getHeight: 0,
 
       updateTriggers: {
-        getSourceColor: [DATA, loadingFilter, showFlow],
-        getTargetColor: [DATA, loadingFilter, showFlow],
-        getWidth: [DATA, voltageFlags, lineWidthSlider],
+        getSourceColor: [DATA, styling.minLoading, styling.showFlow],
+        getTargetColor: [DATA, styling.minLoading, styling.showFlow],
+        getWidth: [DATA, voltageFlags, styling.widthScale],
       },
       pickable: true,
       autoHighlight: true,
