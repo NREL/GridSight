@@ -111,8 +111,9 @@
   }
 
   #flowCheckbox {
-    display: inline;
-    float: left
+    margin: 1%;
+
+    float: left;
   }
 
   #Dispatch {
@@ -171,4 +172,16 @@
 
   #timeseriesButtons {
     display: inline;
+  }
+
+  .minmaxContainer {
+    margin: 1%;
+    float: right;
+  }
+
+  .minmaxInput {
+    margin: 1%;
+    border-radius: 4px;
+    width: 25%;
+    height: 5%;
   }
