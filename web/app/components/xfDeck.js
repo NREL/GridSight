@@ -1,13 +1,16 @@
 'use client';
 import DeckGL from '@deck.gl/react';
 import {StaticMap} from 'react-map-gl';
-import {BASEMAP} from '@deck.gl/carto';
 import { SelectionLayer } from '@nebula.gl/layers';
 import React, {useState, useEffect} from 'react';
 import Multiselect from 'multiselect-react-dropdown';
 
 import * as transformations from '../lib/transformations';
 import {create_gen_layer, create_state_layer, create_vre_layer, create_zone_layer, create_trx_arc_layer} from '../lib/layer_generators';
+
+//base layer controller
+
+import BaseLayerController from './BaseLayerControl';
 
 //import Colorbar from './colormap';
 import { saveAs } from 'file-saver';
@@ -129,6 +132,10 @@ export function DeckApp() {
     const [VRE, updateVRE] = useState();
     const [GEN, updateGEN] = useState();
     const [STATES, updateStates] = useState();
+
+
+    const [BaseLayer, updateBaseLayer] = useState([{id: 7, name: "CUSTOM", layer: "CUSTOM", isCarto:false, clearColor:[0,0,0.1,1]}]);
+
 
 
     const [allProjects, updateAllProjects] = useState();
@@ -378,8 +385,10 @@ export function DeckApp() {
         longitude: -104.0,
         zoom: 4,
         bearing: 0,
-        pitch: 30
+        pitch: 0
     }
+
+
 
     const states = create_state_layer(STATES);
     const zone_layer = create_zone_layer(ZONES);
@@ -429,6 +438,19 @@ export function DeckApp() {
 
     // Layers
     //const layers = [states, zone_layer, trx_layer,vre_layer, gen_layer, select_layer]
+
+    const [staticlayers, updateLayers] = useState([]);
+
+    useEffect(()=>{
+      var new_layers = [];
+      if (BaseLayer[0].name == "CUSTOM"){
+        console.log("loading custom base map")
+        new_layers.push([states, zone_layer])
+      }
+      //new_layers.push([trx_layer,vre_layer, gen_layer])
+      updateLayers(new_layers)
+    }, [TRX, VRE, GEN, BaseLayer])
+
     const layers = [trx_layer,vre_layer, gen_layer, select_layer]
 
     return (
@@ -436,13 +458,18 @@ export function DeckApp() {
       <DeckGL
         controller={outsideFilter}
         initialViewState={INITIAL_VIEW_STATE}
-        layers={layers }
+        layers={[...staticlayers, ...layers] }
         glOptions={{ preserveDrawingBuffer: true }}
-        //parameters={{
-        //clearColor: [0,0, 0.1, 1]
-      //}}
+
+        parameters={{
+        clearColor: BaseLayer[0].clearColor //[0,0, 0.1, 1]
+      }}
       >
-      <StaticMap mapStyle={BASEMAP.VOYAGER_NOLABELS} />
+
+      {BaseLayer[0].isCarto && // Use Carto if chosen, else basemap should be in layers
+            <StaticMap mapStyle={BaseLayer[0].layer} />
+      }
+
 
       <div id='Dispatch' onMouseEnter={()=>updateOutsideFilter(false)} onMouseLeave={()=>updateOutsideFilter(true)}>
         <Dispatch index={index} project={project} scenario={scenario} visible={showDispatch}/>
@@ -484,6 +511,12 @@ export function DeckApp() {
         />
         </div>
 
+        <div id="BaseLayerController">
+        Base Maps
+
+        </div>
+
+        <BaseLayerController baseLayerProp={BaseLayer} onLayerSelect={(val)=> updateBaseLayer(val)}/>
 
 
         <div id='Actions'>
@@ -532,19 +565,22 @@ export function DeckApp() {
         </div>
 
         <div id='GenCheckbox' className='LayerCheckbox'>
+          <div>
             Show Layer
             <input type='checkbox' checked={generationStyling.visible} onChange={()=>toggleGenLayer()}/>
+          </div>
         </div>
 
-        <div id = 'MinMaxRadius' className='minmax'>
+
+        <div id = 'MinMaxRadius' className='minmaxContainer'>
           <div>
             Min Radius
-            <input type='number' id='minRadiusInput' onChange={e=>updateGenStyling({...generationStyling, minRadius: Number(e.target.value)})} min={0} />
+            <input type='number' id='minRadiusInput' className='minmaxInput' onChange={e=>updateGenStyling({...generationStyling, minRadius: Number(e.target.value)})} min={0} />
           </div>
 
           <div>
             Max Radius
-            <input type='number' id='maxRadiusInput' onChange={e=>updateGenStyling({...generationStyling, maxRadius: Number(e.target.value)})} min={generationStyling.minRadius} />
+            <input type='number' id='maxRadiusInput' className='minmaxInput' onChange={e=>updateGenStyling({...generationStyling, maxRadius: Number(e.target.value)})} min={generationStyling.minRadius} />
           </div>
 
         </div>
@@ -591,6 +627,7 @@ export function DeckApp() {
           }} />
         </div>
 
+
         <div id='flowCheckbox' className='LayerCheckbox'>
           <div>
             Show Layer
@@ -602,15 +639,15 @@ export function DeckApp() {
           </div>
         </div>
 
-        <div id = 'MinMaxWidth' className='minmax'>
+        <div id = 'MinMaxWidth' className='minmaxContainer'>
           <div>
             Min Width
-            <input type='number' id='minRadiusInput' onChange={e=>updateTRXStyling({...trxStyling, minWidth: Number(e.target.value)})} min={0} />
+            <input type='number' id='minRadiusInput' className='minmaxInput' onChange={e=>updateTRXStyling({...trxStyling, minWidth: Number(e.target.value)})} min={0} />
           </div>
 
           <div>
             Max Width
-            <input type='number' id='maxRadiusInput' onChange={e=>updateTRXStyling({...trxStyling, maxWidth: Number(e.target.value)})} min={trxStyling.minRadius} />
+            <input type='number' id='maxRadiusInput' className='minmaxInput' onChange={e=>updateTRXStyling({...trxStyling, maxWidth: Number(e.target.value)})} min={trxStyling.minRadius} />
           </div>
 
         </div>
