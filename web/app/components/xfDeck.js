@@ -75,7 +75,7 @@ function makeLabels(list){
 
 async function listProjects(){
 
-  const response = await fetch(`/api/projects`, {cache: 'no-store'})
+  const response = await fetch(`/api/projects`)
   const data = await response.json()
 
   return makeLabels(data)
@@ -85,7 +85,7 @@ async function listScenarios(project){
   console.log("Selected Project")
   const p = project[0].name
   console.log(project[0].name)
-  const response = await fetch(`/api/projects/${p}`, {cache: 'no-store'})
+  const response = await fetch(`/api/projects/${p}`)
   const data = await response.json()
 
   return makeLabels(data)

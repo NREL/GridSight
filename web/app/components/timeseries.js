@@ -42,7 +42,7 @@ async function getTimeSeries(project, scenario, filename) {
     const p = project[0].name
     const s = scenario[0].name
 
-    const response = await fetch(`/api/timeseries/${p}/${s}/files/${filename}`, {cache: "no-store"})
+    const response = await fetch(`/api/timeseries/${p}/${s}/files/${filename}`)
 
     const data = await response.json();
     return JSON.parse(data)
