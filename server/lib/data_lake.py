@@ -83,7 +83,7 @@ class S3Handler:
             return df
 
 
-    @lru_cache(maxsize=5)
+    #@lru_cache(maxsize=5)
     def get_geofile(self, project, scenario, file_name):
 
         try:
