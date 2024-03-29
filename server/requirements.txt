@@ -7,3 +7,4 @@ pyarrow
 uwsgi
 python-dotenv
 s3fs
+typing_extensions

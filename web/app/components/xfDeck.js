@@ -4,7 +4,7 @@ import {StaticMap} from 'react-map-gl';
 import { SelectionLayer } from '@nebula.gl/layers';
 import React, {useState, useEffect} from 'react';
 import Multiselect from 'multiselect-react-dropdown';
-
+import {BASEMAP} from '@deck.gl/carto';
 import * as transformations from '../lib/transformations';
 import {create_gen_layer, create_state_layer, create_vre_layer, create_zone_layer, create_trx_arc_layer} from '../lib/layer_generators';
 
@@ -134,7 +134,9 @@ export function DeckApp() {
     const [STATES, updateStates] = useState();
 
 
-    const [BaseLayer, updateBaseLayer] = useState([{id: 7, name: "CUSTOM", layer: "CUSTOM", isCarto:false, clearColor:[0,0,0.1,1]}]);
+
+    //const [BaseLayer, updateBaseLayer] = useState([{id: 7, name: "CUSTOM", layer: "CUSTOM", isCarto:false, clearColor:[0,0,0.1,1]}]);
+    const [BaseLayer, updateBaseLayer] = useState([{id: 1, name: "DARK_MATTER", layer: BASEMAP.DARK_MATTER, isCarto:true, clearColor:[0,0,0,0]}]);
 
 
 
