@@ -14,7 +14,7 @@
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-plugin-zoom": "^2.0.1",
     "date-fns": "^2.30.0",
-    "deck.gl": "^8.9.19",
+    "deck.gl": "^9.0.12",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
     "file-saver": "^2.0.5",
@@ -28,12 +28,14 @@
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
+    "react-icons": "^5.2.0",
     "react-map-gl": "5",
     "swr": "^2.2.0",
     "tailwindcss": "3.3.2"
   },
   "devDependencies": {
-    "@types/node": "20.4.1",
-    "typescript": "5.1.6"
+    "@types/node": "20.12.7",
+    "@types/react": "18.2.79",
+    "typescript": "5.4.5"
   }
 }

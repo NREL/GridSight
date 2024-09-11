@@ -1,7 +1,7 @@
 'use client';
 import DeckGL from '@deck.gl/react';
 import {StaticMap} from 'react-map-gl';
-import { SelectionLayer } from '@nebula.gl/layers';
+//import { SelectionLayer } from '@nebula.gl/layers';
 import React, {useState, useEffect} from 'react';
 import Multiselect from 'multiselect-react-dropdown';
 
@@ -415,20 +415,20 @@ export function DeckApp() {
       }
     }
 
-    const select_layer = new SelectionLayer({
-    id: 'selection',
-    selectionType: selectionType, //'rectangle',
-    onSelect: ({ pickingInfos }) => {
+    //const select_layer = new SelectionLayer({
+    //id: 'selection',
+    //selectionType: selectionType, //'rectangle',
+    //onSelect: ({ pickingInfos }) => {
       //this.updateSelected(pickingInfos);
-      console.log(pickingInfos)
-    },
-    layerIds: ['trx'],
-    getTentativeFillColor: () => [255, 0, 255, 100],
-    getTentativeLineColor: () => [0, 0, 255, 255],
-    getTentativeLineDashArray: () => [0, 0],
-    lineWidthMinPixels: 3,
-    visible: true
-    });
+    //  console.log(pickingInfos)
+    //},
+    //layerIds: ['trx'],
+    //getTentativeFillColor: () => [255, 0, 255, 100],
+    //getTentativeLineColor: () => [0, 0, 255, 255],
+    //getTentativeLineDashArray: () => [0, 0],
+    //lineWidthMinPixels: 3,
+    //visible: true
+    //});
 
 
     const [showFilters, updateFilters] = useState(true);
@@ -451,7 +451,7 @@ export function DeckApp() {
       updateLayers(new_layers)
     }, [TRX, VRE, GEN, BaseLayer])
 
-    const layers = [trx_layer,vre_layer, gen_layer, select_layer]
+    const layers = [trx_layer,vre_layer, gen_layer]
 
     return (
 

@@ -1,0 +1,62 @@
+
+#Tray {
+    width: fit-content;
+    height: auto;
+
+    margin: 1%;
+    background-color: rgb(207, 206, 206);
+    display: grid;
+}
+
+#TrayComponents2 {
+    display: grid;
+}
+
+.trayComponent {
+
+    width: inherit;
+    height: 30%;
+    display: inline-block flow;
+    border-color: #d44811;
+    background-color: rgb(78, 78, 78);
+    border-width:1px;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    vertical-align: middle;
+}
+
+.trayText {
+    float: right;
+    width: 70%;
+    font-size: x-large;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    color:#e9e4e2;
+    margin: 3%;
+    vertical-align: middle;
+    text-align: right;
+}
+
+.trayButtonContainer {
+    float: left;
+    width: fit-content;
+    height: fit-content;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.trayButton {
+    border-radius: 8px;
+    border-style: none;
+    vertical-align: middle;
+    margin: 1%;
+    width: inherit;
+    height:inherit;
+}
+
+
+.trayButton:hover {
+    background-color: #5759c5; /* Green */
+    color: white;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  }

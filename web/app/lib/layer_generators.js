@@ -1,5 +1,5 @@
 import {GeoJsonLayer, ArcLayer} from '@deck.gl/layers';
-import { SelectionLayer } from '@nebula.gl/layers';
+//import { SelectionLayer } from '@nebula.gl/layers';
 
 import * as transformations from '../lib/transformations';
 
