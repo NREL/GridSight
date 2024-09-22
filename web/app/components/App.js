@@ -7,6 +7,22 @@ import './app.css'
 import DeckGL from '@deck.gl/react';
 import {StaticMap} from 'react-map-gl';
 
+
+async function getScenarioMetadata(project, scenario){
+
+    // returns a list of layer object metadata.
+
+    // Data/Timeseries Routes
+    // and color maps styling is passed to
+
+    // layer routes and Data Objects are passed to layer generators.
+
+    const response = await fetch(`/api/${p}/${s}/layers`)
+    const data = await response.json();
+    return data;
+}
+
+
 export function App() {
 
     // Message Bus for sync between tabs/windows.
@@ -31,20 +47,6 @@ export function App() {
         updateScenarioState(value);
     };
 
-    // List of all layers available under the project/scenario
-    // This doesn't necessarily turn on/off a layer
-    var layerState2 = {
-        layers: [] // list of layer objects (A class that returns the layer definition, available style options, and handles buffering)
-    }
-
-    //
-    var clockState = {
-        startDate: "",
-        endDate: "",
-        playbackFrequency: 500, //ms between timesteps
-    }
-
-
     // Tray Component allows users to adjust aspects of the scenario/layers
 
     // ClockView component, movable div that just displays the time.
@@ -52,22 +54,65 @@ export function App() {
     // Scenarios - List of scenario components, should adjust layout as more
     const [BaseLayer, updateBaseLayer] = useState(BASEMAP.DARK_MATTER);
 
-    var testLayerState = {
-        layers: [
-            {layerId: 'genlayer', type:'point', styling:{
-                cmap:'category',
 
-            }},
-            {layerId: 'trxlayer', type:'line', styling:{
-                cmap:'plasma',
-                filled: true,
+    //Layer Objects
+
+    const [layerObjects, updateLayerObjects] = useState({});
+
+    useEffect(()=>{
+        console.log("change in scenario state");
+        console.log(scenarioState);
+        getScenarioMetadata(scenarioState.project, scenarioState.scenario).then(data=>updateLayerObjects(data));
+    }, [scenarioState])
+
+
+    var scenarioLayerProps = [
+
+        {
+            name:'friendly name',
+            type: 'VRE or GEN or TRX, etc.',
+            geoPath: '/route/to/geo',
+            timeseriesPaths: [
+                {name:'series1', route:'/route/to/timeseries/1' },
+                {name:'series2', route:'/route/to/timeseries/2' },
+            ],
+            // FEATURE REQUEST: add static files that you can style with
+            //
+            staticPaths:'/route/to/static/props',
+
+            //Styling options common to all layer types.
+            commonStyling: {
                 visible: true,
-                scale: 200,
+                linewidthScale:1,
+                minLineWidth:0,
+                maxLineWidth:1000,
+                radiusScale:1, // sometimes ingored?
+
+                pickable: true,
+            },
+
+            // Custom Stylings
+            // TRX utlization threshold
+            //
+            additionalStyling:{
+
+            },
+            // create a set of dynamic filters based on
+            // properties in geojson.
+            filters:{
+
+            },
+
+        }
+
+    ]
 
 
-
-            }}
-        ]
+    // Clock State (and index)
+    var clockState = {
+        startDate: "",
+        endDate: "",
+        playbackFrequency: 500, //ms between timesteps
     }
 
 
@@ -114,7 +159,7 @@ export function App() {
         userState={'test'}
         baseLayerProp={BaseLayer}
         onBaseLayerChange={(val)=>updateBaseLayer(val)}
-        scenarioState={scenarioState}
+        scenarioProp={scenarioState}
         onScenarioChange={onSChange}
           />
         </DeckGL>

@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.1",
     "@mui/material": "^6.1.1",
     "@mui/x-date-pickers": "^7.17.0",
     "autoprefixer": "10.4.14",
@@ -23,23 +24,20 @@
     "eslint-config-next": "13.4.9",
     "file-saver": "^2.0.5",
     "hammerjs": "^2.0.8",
-    "multiselect-react-dropdown": "^2.0.25",
-    "nebula.gl": "^1.0.4",
-    "next": "13.4.9",
+    "next": "^14.2.13",
     "next-auth": "^4.22.1",
     "postcss": "8.4.25",
     "rc-slider": "^10.2.1",
-    "react": "18.2.0",
+    "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
-    "react-dom": "18.2.0",
-    "react-icons": "^5.2.0",
+    "react-dom": "^18.3.1",
     "react-map-gl": "5",
     "swr": "^2.2.0",
     "tailwindcss": "3.3.2"
   },
   "devDependencies": {
     "@types/node": "20.12.7",
-    "@types/react": "18.2.79",
+    "@types/react": "^18.3.8",
     "typescript": "5.4.5"
   }
 }

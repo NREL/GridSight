@@ -1,18 +1,19 @@
 'use client';
-import {
-    HiChevronRight, HiChevronLeft,
-    HiSquare3Stack3D, HiClock, HiMiniListBullet,
-    HiOutlineMap
 
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LayersIcon from '@mui/icons-material/Layers';
+import MapIcon from '@mui/icons-material/Map';
+import MenuIcon from '@mui/icons-material/Menu';
 
-} from "react-icons/hi2";
 import React, {useState, useEffect} from 'react';
-import BaseLayerController from "./BaseLayerControl";
+import BaseLayerController from "./controllers/BaseLayerControl";
 import ClockController from "./controllers/clockController";
 import ScenarioPicker from "./controllers/Scenarios";
 import './tray.css'
 
-export default function Tray({userState, baseLayerProp, onBaseLayerChange, scenarioState, onScenarioChange}){
+export default function Tray({userState, baseLayerProp, onBaseLayerChange, scenarioProp, onScenarioChange}){
     // user state has available options
     // selected options are passed back up the state tree
 
@@ -32,9 +33,9 @@ export default function Tray({userState, baseLayerProp, onBaseLayerChange, scena
         onBaseLayerChange(val);
     }
 
-    const onScenarioSelect = (val) => {
+    function onScenarioSelect(val){
         onScenarioChange(val);
-    };
+    }
 
     var buttonSize = 50;
 
@@ -67,39 +68,40 @@ export default function Tray({userState, baseLayerProp, onBaseLayerChange, scena
             <button className="trayButton" onClick={()=>toggleShowTray()}>
 
                 {showTray &&
+                <ChevronRightIcon size={buttonSize}/>
 
-                <HiChevronRight size={buttonSize}/>
                 }
                 {!showTray &&
-                <HiChevronLeft size={buttonSize}/>}
+                <ChevronLeftIcon size={buttonSize}/>
+                }
             </button>
             </div>
             {showTray &&
 
             <div className='trayButtonContainer'>
             <button className="trayButton" onClick={()=>updateShowScenarios(!showScenarios)}>
-                <HiMiniListBullet size={buttonSize}/>
+                <MenuIcon size={buttonSize}/>
             </button>
             </div>
             }
             {showTray &&
             <div className='trayButtonContainer'>
             <button className="trayButton" onClick={()=>updateShowBasemaps(!showBasemaps)} >
-                        <HiOutlineMap size={buttonSize}/>
+                <MapIcon size={buttonSize}/>
             </button>
             </div>
             }
             {showTray &&
             <div className="trayButtonContainer">
                 <button className="trayButton" onClick={()=>updateShowLayers(!showLayers)}>
-                    <HiSquare3Stack3D size={buttonSize}/>
+                    <LayersIcon size={buttonSize}/>
                 </button>
             </div>
             }
             {showTray &&
             <div className="trayButtonContainer">
             <button className="trayButton" onClick={()=>updateShowTime(!showTime)}>
-                        <HiClock size={buttonSize}/>
+                <AccessTimeIcon size={buttonSize}/>
             </button>
             </div>
             }
@@ -112,16 +114,17 @@ export default function Tray({userState, baseLayerProp, onBaseLayerChange, scena
 
             <div id="TrayComponents">
                 <div className="trayComponent">
-
+                <div className="trayButtonContainer">
                     {showScenarios &&
                         <div className="trayText">
                         Projects and Scenarios
                         <ScenarioPicker
-                        scenarioProp={scenarioState}
-                        onSChange={(val) => onScenarioSelect(val)}
+                        scenarioProp={scenarioProp}
+                        onChange={(val) => onScenarioSelect(val)}
                         />
                         </div>
                     }
+                </div>
                 </div>
                 <div className="trayComponent">
 
