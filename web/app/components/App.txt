@@ -7,7 +7,7 @@ import './app.css'
 
 import DeckGL from '@deck.gl/react';
 import {StaticMap} from 'react-map-gl';
-import {MapView, MapViewState} from '@deck.gl/core';
+//import {MapView, MapViewState} from '@deck.gl/core';
 
 
 import AnimatedArcLayer from './animated-arc-group-layer';
