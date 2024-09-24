@@ -57,21 +57,21 @@ export function App() {
 
     //Layer Objects
 
-    const [layerObjects, updateLayerObjects] = useState({});
-
     useEffect(()=>{
         console.log("change in scenario state");
         console.log(scenarioState);
-        getScenarioMetadata(scenarioState.project, scenarioState.scenario).then(data=>updateLayerObjects(data));
+        //getScenarioMetadata(scenarioState.project, scenarioState.scenario).then(data=>updateLayerObjects(data));
     }, [scenarioState])
 
 
     var scenarioLayerProps = [
 
         {
-            name:'friendly name',
-            type: 'VRE or GEN or TRX, etc.',
+            name:'Gen Layer',
+            gridType: 'VRE or GEN or TRX, etc.',
+            deckType: "GeoJsonLayer",
             geoPath: '/route/to/geo',
+
             timeseriesPaths: [
                 {name:'series1', route:'/route/to/timeseries/1' },
                 {name:'series2', route:'/route/to/timeseries/2' },
@@ -81,38 +81,136 @@ export function App() {
             staticPaths:'/route/to/static/props',
 
             //Styling options common to all layer types.
-            commonStyling: {
-                visible: true,
-                linewidthScale:1,
-                minLineWidth:0,
-                maxLineWidth:1000,
-                radiusScale:1, // sometimes ingored?
+            visible: true,
+            pickable: false,
 
-                pickable: true,
+            pointStyles: {
+                SizeType: 'single',//static or dynamic
+                StaticSources:['static_file_1', 'static_file_2'],
+                StaticSourceColumns: ['column1', 'column2'],
+                DynamicSources:['timeseries_file_1', 'timeseries_file_2'],
+                Size: 1, // if 'single' use as numeric, else, use as index in Sources above
+                Scale: 1,
+                Units: 'meters',//'common', or 'pixels'
+                MinPixels: 0,
+                MaxPixels: 100,
+                pointAntialiasing: true,
+                pointBillboard: false,
+
+            },
+            // common to all
+            lineStyles: {
+                SizeType: 'single',//static or dynamic
+                StaticSources:['static_file_1', 'static_file_2'],
+                StaticSourceColumns: ['column1', 'column2'],
+                Size:1, //single, Static array, dynamic array,
+                Scale:1,
+                Units:'meters', //'common', or 'pixels'
+                MinPixels:0,
+                MaxPixels:1000,
+                lineMiterLimit:4,
+                lineCapRounded:false,
+                lineJointRounded: false,
+                lineBillboard: false,
+
+            },
+            arcStyles:{
+                sourceColor:[[0,255,0]],
+                targetColor:[[255,0,0]],
             },
 
             // Custom Stylings
             // TRX utlization threshold
             //
             additionalStyling:{
-
+                property1: ['test']
             },
             // create a set of dynamic filters based on
             // properties in geojson.
             filters:{
-
+                property1: ['test']
             },
 
-        }
+        },
+
+        {
+            name:'TRX Layer',
+            gridType: 'VRE or GEN or TRX, etc.',
+            deckType: 'ArcLayer',
+            geoPath: '/route/to/geo',
+
+            timeseriesPaths: [
+                {name:'series1', route:'/route/to/timeseries/1' },
+                {name:'series2', route:'/route/to/timeseries/2' },
+            ],
+            // FEATURE REQUEST: add static files that you can style with
+            //
+            staticPaths:'/route/to/static/props',
+
+            //Styling options common to all layer types.
+            visible: true,
+            pickable: false,
+            pointStyles: {
+                Source: 'single',//static or dynamic
+                StaticSources:['static_file_1', 'static_file_2'],
+                StaticSourceColumns: ['column1', 'column2'],
+                DynamicSources:['timeseries_file_1', 'timeseries_file_2'],
+                Size: 1, // if 'single' use as numeric, else, use as index in Sources above
+                Scale: 1,
+                Units: 'meters',//'common', or 'pixels'
+                MinPixels: 0,
+                MaxPixels: 100,
+                pointAntialiasing: true,
+                pointBillboard: false,
+
+            },
+            // common to all
+            lineStyles: {
+                Source: 'single',//static or dynamic
+                StaticSources:['static_file_1', 'static_file_2'],
+                StaticSourceColumns: ['column1', 'column2'],
+                Size:1, //single, Static array, dynamic array,
+                Scale:1,
+                Units:'meters', //'common', or 'pixels'
+                MinPixels:0,
+                MaxPixels:1000,
+                lineMiterLimit:4,
+                lineCapRounded:false,
+                lineJointRounded: false,
+                lineBillboard: false,
+
+            },
+            arcStyles:{
+                sourceColor:[[0,255,0]],
+                targetColor:[[255,0,0]],
+            },
+
+            // Custom Stylings
+            // TRX utlization threshold
+            //
+            additionalStyling:{
+                property1: ['test']
+            },
+            // create a set of dynamic filters based on
+            // properties in geojson.
+            filters:{
+                property1: ['test']
+            },
+
+        },
+
 
     ]
 
+
+    const [layerProps, updateLayerProps] = useState(scenarioLayerProps);
 
     // Clock State (and index)
     var clockState = {
         startDate: "",
         endDate: "",
         playbackFrequency: 500, //ms between timesteps
+        index: 0
     }
 
 
@@ -143,7 +241,7 @@ export function App() {
     return (
 
         <DeckGL
-            controller={true}
+            controller={false}
             useDevicePixels={true}
             initialViewState={viewState}
             //layers={[...staticlayers]}
@@ -161,6 +259,8 @@ export function App() {
         onBaseLayerChange={(val)=>updateBaseLayer(val)}
         scenarioProp={scenarioState}
         onScenarioChange={onSChange}
+        layerProps={layerProps}
+        onLayerPropChange={(val)=>updateLayerProps(val)}
           />
         </DeckGL>
 

@@ -1,5 +1,3 @@
-'use client';
-
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -11,9 +9,10 @@ import React, {useState, useEffect} from 'react';
 import BaseLayerController from "./controllers/BaseLayerControl";
 import ClockController from "./controllers/clockController";
 import ScenarioPicker from "./controllers/Scenarios";
+import LayerFactory from "./controllers/Layers";
 import './tray.css'
 
-export default function Tray({userState, baseLayerProp, onBaseLayerChange, scenarioProp, onScenarioChange}){
+export default function Tray({userState, baseLayerProp, onBaseLayerChange, scenarioProp, onScenarioChange, layerProps, onLayerPropChange}){
     // user state has available options
     // selected options are passed back up the state tree
 
@@ -64,7 +63,7 @@ export default function Tray({userState, baseLayerProp, onBaseLayerChange, scena
 
         <div id='Tray'>
             <div id = "trayButtons">
-            <div classname='trayButtonContainer'>
+            <div className='trayButtonContainer'>
             <button className="trayButton" onClick={()=>toggleShowTray()}>
 
                 {showTray &&
@@ -145,7 +144,7 @@ export default function Tray({userState, baseLayerProp, onBaseLayerChange, scena
                 <div className="trayComponent">
                     {showLayers &&
                         <div className="trayText">
-                        Layers and styling
+                            <LayerFactory AllLayersProps={layerProps} updateAllLayerProps={onLayerPropChange}/>
                         </div>
                     }
                 </div>

@@ -31,7 +31,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "app/api/projects/route.js", "app/components/App.js", "middleware.js"  ],
+, "app/api/projects/route.js", "app/components/App.js", "middleware.js", "app/components/controllers/styleController.js"  ],
   "exclude": [
     "node_modules"
   ]
