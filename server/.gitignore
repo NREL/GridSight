@@ -2,3 +2,4 @@
 assets/*
 *.pyc
 old/*
+data

@@ -5,9 +5,9 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import { DatePicker } from '@mui/x-date-pickers';
+import Box from '@mui/material/Box';
 
-
-export default function ClockController(){
+export default function ClockController({props, onChange}){
 
 
     // Time State includes
@@ -17,8 +17,8 @@ export default function ClockController(){
     // refresh rate
 
     return (
-    <div id='clockController'>
-        Time & Animation
+    <Box sx={{minWidth: 500, alignItems: 'center'}}>
+        <h2>Time & Animation</h2>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <div>
             <DatePicker label = "Start Date"/>
@@ -26,6 +26,6 @@ export default function ClockController(){
             </div>
         </LocalizationProvider>
 
-    </div>
+    </Box>
     )
 }

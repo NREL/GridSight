@@ -4,8 +4,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-
-
+import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
+import ThemeProvider from '@mui/system/ThemeProvider';
 function makeLabels(list){
   var i = 1;
   var options = []
@@ -68,9 +70,11 @@ export default function ScenarioPicker({scenarioProp, onChange}){
     onChange({...scenarioProp, scenario: event.target.value});
   }
   return (
-    <div>
-    <Box sx={{ minWidth: 120 }}>
-      <FormControl fullWidth>
+    <Box sx={{minWidth: 500, width:'100%', margin:'2%', padding: '2%'}}>
+      <h2>Projects and Scenarios</h2>
+    <Stack direction="row" spacing={3} divider={<Divider orientation="vertical" flexItem />}>
+    <Box sx={{ width: '40%' }}>
+      <FormControl fullWidth  >
         <InputLabel id="demo-simple-select-label">Project</InputLabel>
         <Select
           labelId="demo-simple-select-label"
@@ -80,13 +84,15 @@ export default function ScenarioPicker({scenarioProp, onChange}){
           onChange={handleProjectChange}
         >
           {allProjects.map((project)=>(
-            <MenuItem value={project.name}>{project.name}</MenuItem>
+            <MenuItem value={project.name}>
+              {project.name}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
     </Box>
 
-    <Box sx={{ minWidth: 120 }}>
+    <Box sx={{  width: '40%'  }}>
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select2-label">Scenario</InputLabel>
           <Select
@@ -97,12 +103,17 @@ export default function ScenarioPicker({scenarioProp, onChange}){
             onChange={handleScenarioChange}
           >
             {allScenarios.map((scenario)=>(
-              <MenuItem value={scenario.name}>{scenario.name}</MenuItem>
+              <MenuItem value={scenario.name}>
+                <Typography variant="subheading" noWrap={false}>
+                {scenario.name}
+                </Typography>
+                </MenuItem>
             ))}
           </Select>
         </FormControl>
       </Box>
-    </div>
+      </Stack>
+    </Box>
 
   );
 

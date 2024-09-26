@@ -10,6 +10,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { FormGroup } from '@mui/material';
 import Switch from '@mui/material/Switch';
+import Divider from '@mui/material/Divider';
 
 
 
@@ -59,7 +60,8 @@ export function CommonStyleController({type, props, onChange}){
     }
 
     return (
-        <div>
+        <Box >
+            <Divider/>
             <h2>{type} Styling </h2>
                 <FormControl>
                     <FormLabel id="radius-size-buttons"><h2>{name} Type</h2></FormLabel>
@@ -118,7 +120,7 @@ export function CommonStyleController({type, props, onChange}){
 
                 </Stack>
                 <Slider aria-label="Scale" value={props.Scale} onChange={handleScaleChange}/>
-        </div>
+        </Box>
     )
 
 
@@ -145,7 +147,7 @@ export function StyleController({props, onChange}){
 
     // ERROR radio group is not "controlled" because of undefined inputs.
     return (
-        <div>
+        <Box >
             <CommonStyleController type={'Point'} props={props.pointStyles} onChange={onPointStyleChange}/>
             <h3>Additional Point Styling</h3>
             <br/>
@@ -153,7 +155,7 @@ export function StyleController({props, onChange}){
             <h3>Additiona Line Styling</h3>
             <h3>Arc Styling</h3>
 
-        </div>
+        </Box>
     )
 }
 

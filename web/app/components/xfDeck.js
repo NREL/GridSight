@@ -5,8 +5,8 @@ import {StaticMap} from 'react-map-gl';
 import React, {useState, useEffect} from 'react';
 import Multiselect from 'multiselect-react-dropdown';
 
-import * as transformations from '../lib/transformations';
-import {create_gen_layer, create_state_layer, create_vre_layer, create_zone_layer, create_trx_arc_layer} from '../lib/layer_generators';
+import * as transformations from '../lib/transformations.js';
+import {create_gen_layer, create_state_layer, create_vre_layer, create_zone_layer, create_trx_arc_layer} from '../lib/layer_generators.js';
 
 //base layer controller
 

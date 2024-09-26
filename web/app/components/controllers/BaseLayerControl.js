@@ -21,10 +21,9 @@ export default function BaseLayerController ({baseLayerProp, onLayerSelect}){
     };
 
     return (
-        <div id="BaseLayerController">
 
-
-        <Box sx={{ minWidth: 200 }}>
+        <Box sx={{ minWidth: 300 }}>
+          <h2>Basemap</h2>
         <FormControl fullWidth>
           <InputLabel id="tile-layer-label">Base Map</InputLabel>
           <Select
@@ -44,8 +43,6 @@ export default function BaseLayerController ({baseLayerProp, onLayerSelect}){
           </Select>
         </FormControl>
         </Box>
-
-        </div>
 
 
 

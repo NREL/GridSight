@@ -6,6 +6,92 @@ import './app.css'
 
 import DeckGL from '@deck.gl/react';
 import {StaticMap} from 'react-map-gl';
+import { styled, useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import CssBaseline from '@mui/material/CssBaseline';
+import MuiAppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import LayersIcon from '@mui/icons-material/Layers';
+import MapIcon from '@mui/icons-material/Map';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import SettingsIcon from '@mui/icons-material/Settings';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import { positions } from '@mui/system';
+import ClockView from './views/ClockView.js'
+import Draggable from 'react-draggable';
+
+const drawerWidth = 240;
+
+
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+    ({ theme }) => ({
+      flexGrow: 1,
+      padding: theme.spacing(3),
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      marginLeft: `-${drawerWidth}px`,
+      variants: [
+        {
+          props: ({ open }) => open,
+          style: {
+            transition: theme.transitions.create('margin', {
+              easing: theme.transitions.easing.easeOut,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+            marginLeft: 0,
+          },
+        },
+      ],
+    }),
+  );
+
+  const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== 'open',
+  })(({ theme }) => ({
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    variants: [
+      {
+        props: ({ open }) => open,
+        style: {
+          width: `calc(100% - ${drawerWidth}px)`,
+          marginLeft: `${drawerWidth}px`,
+          transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
+        },
+      },
+    ],
+  }));
+
+  const DrawerHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+  }));
 
 
 async function getScenarioMetadata(project, scenario){
@@ -24,7 +110,21 @@ async function getScenarioMetadata(project, scenario){
 
 
 export function App() {
+    const theme = useTheme();
+    const [open, setOpen] = React.useState(false);
+    const [deckControl, setDeckControl] = useState(true);
 
+    useEffect(()=>{
+      setDeckControl(!open)
+    }, [open])
+
+    const handleDrawerOpen = () => {
+      setOpen(true);
+    };
+
+    const handleDrawerClose = () => {
+      setOpen(false);
+    };
     // Message Bus for sync between tabs/windows.
     // get metadata showing everything available to the user
     // User State
@@ -238,10 +338,100 @@ export function App() {
       });
 
 
-    return (
+    const [listItemOpen, updateListItemOpen] = useState({scenarios:false, layers:false, basemap:false, animation:false});
 
-        <DeckGL
-            controller={false}
+    function handleListItemClick(index, event){
+        var newListItemOpen = {scenarios:false, layers:false, basemap:false, animation:false};
+
+        if (index==0){
+            newListItemOpen.scenarios = !newListItemOpen.scenarios;
+        }
+        else if (index == 1){
+            newListItemOpen.layers = !newListItemOpen.layers;
+        }
+        else if (index == 2){
+            newListItemOpen.basemap = !newListItemOpen.basemap;
+        }
+        else if (index == 3){
+            newListItemOpen.animation = !newListItemOpen.animation;
+        }
+        console.log(newListItemOpen);
+        console.log(event.target.value);
+        updateListItemOpen(newListItemOpen);
+    }
+
+    const listIcons = [<AnalyticsIcon/>,<LayersIcon/>, <MapIcon/>,  <AccessTimeIcon/>]
+    const listIconsBottom = [<ManageAccountsIcon/>, <SettingsIcon/>]
+    return (
+        <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+          <AppBar position="fixed" open={open}>
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={[
+                  {
+                    mr: 2,
+                  },
+                  open && { display: 'none' },
+                ]}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            sx={{
+              width: drawerWidth,
+              flexShrink: 0,
+              '& .MuiDrawer-paper': {
+                width: drawerWidth,
+                boxSizing: 'border-box',
+              },
+            }}
+            variant="persistent"
+            anchor="left"
+            open={open}
+          >
+            <DrawerHeader>
+              <IconButton onClick={handleDrawerClose}>
+                {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              </IconButton>
+            </DrawerHeader>
+            <Divider />
+            <List>
+              {['Scenarios', 'Layers', 'Basemaps', 'Animation'].map((text, index) => (
+                <ListItem key={text} disablePadding>
+                  <ListItemButton key={index} onClick={(event)=>handleListItemClick(index, event)}>
+                    <ListItemIcon>
+                      {listIcons[index]}
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+            <Divider />
+            <List>
+              {['User', 'Settings'].map((text, index) => (
+                <ListItem key={text} disablePadding>
+                  <ListItemButton disabled={true}>
+                    <ListItemIcon>
+                      {listIconsBottom[index]}
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Drawer>
+          <Main open={open}>
+            <DrawerHeader />
+            <DeckGL
+            controller={deckControl}
             useDevicePixels={true}
             initialViewState={viewState}
             //layers={[...staticlayers]}
@@ -249,22 +439,34 @@ export function App() {
             onViewStateChange={evt => setViewState(evt.viewState)}
 
 
-        >
-        <StaticMap id='mapbox' mapStyle={BaseLayer} reuseMaps={true}/>
+            >
+            <StaticMap id='mapbox' mapStyle={BaseLayer} reuseMaps={true}/>
+            {
+                open &&
+            <Box sx={{maxWidth: drawerWidth*3.5,maxHeight:'85%', position:'absolute', left: drawerWidth*1.05, top: drawerWidth*0.5, color: '#000000', bgcolor: '#e2e2e2' }}>
+            <Tray
+                trayFlags={listItemOpen}
+                userState={'test'}
+                baseLayerProp={BaseLayer}
+                onBaseLayerChange={(val)=>updateBaseLayer(val)}
+                scenarioProp={scenarioState}
+                onScenarioChange={onSChange}
+                layerProps={layerProps}
+                onLayerPropChange={(val)=>updateLayerProps(val)}
+            />
+            </Box>
+            }
 
+            <Draggable defaultPosition={{x: 500, y: 500}} disabled={open} onStart={()=>setDeckControl(false)} onStop={()=>setDeckControl(true)}>
+            <Box sx={{maxWidth: drawerWidth*3.5,maxHeight:'85%', color: '#000000', bgcolor: '#e2e2e2' }}>
+              <ClockView/>
+            </Box>
+            </Draggable>
+            </DeckGL>
+        </Main>
 
-        <Tray
-        userState={'test'}
-        baseLayerProp={BaseLayer}
-        onBaseLayerChange={(val)=>updateBaseLayer(val)}
-        scenarioProp={scenarioState}
-        onScenarioChange={onSChange}
-        layerProps={layerProps}
-        onLayerPropChange={(val)=>updateLayerProps(val)}
-          />
-        </DeckGL>
-
-    )
+        </Box>
+      );
 
 
 
