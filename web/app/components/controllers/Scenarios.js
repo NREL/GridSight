@@ -60,6 +60,10 @@ export default function ScenarioPicker({scenarioProp, onChange}){
     listScenarios(scenarioProp.project).then(data=> {updateAllScenarios(data)})
   }, [scenarioProp.project])
 
+  //useEffect(()=>{
+  //  onChange({...scenarioProp, scenario: allScenarios[0].name})
+  //},[allScenarios])
+
   const handleProjectChange = (event) => {
     console.log("Project change detected");
     console.log(event.target.value);
@@ -67,6 +71,7 @@ export default function ScenarioPicker({scenarioProp, onChange}){
   };
 
   const handleScenarioChange = (event) => {
+    console.log("Scenario change detected")
     onChange({...scenarioProp, scenario: event.target.value});
   }
   return (
@@ -98,7 +103,7 @@ export default function ScenarioPicker({scenarioProp, onChange}){
           <Select
             labelId="demo-simple-select2-label"
             id="demo-simple-select2"
-            value={allScenarios[0].name}
+            value={scenarioProp.scenario}
             label="Scenario"
             onChange={handleScenarioChange}
           >
