@@ -8,7 +8,7 @@ import './tray.css'
 
 const trayWidth = 500;
 
-export default function Tray({trayFlags, userState, baseLayerProp, onBaseLayerChange, scenarioProp, onScenarioChange, layerProps, onLayerPropChange}){
+export default function Tray({trayFlags, userState, baseLayerProp, onBaseLayerChange, scenarioProp, onScenarioChange, layerProps, onLayerPropChange, clockState, onClockChange}){
 
     function onBaseSelect(val){
 
@@ -17,6 +17,10 @@ export default function Tray({trayFlags, userState, baseLayerProp, onBaseLayerCh
 
     function onScenarioSelect(val){
         onScenarioChange(val);
+    }
+
+    function onClockSlide(val){
+        onClockChange(val)
     }
 
     return (
@@ -52,7 +56,7 @@ export default function Tray({trayFlags, userState, baseLayerProp, onBaseLayerCh
                 <Box sw={{width: "100%" , boxShadow: 3, color: '#000000' }}>
                     {trayFlags.animation &&
 
-                            <ClockController/>
+                            <ClockController props={clockState} onChange={onClockChange}/>
                     }
                 </Box>
         </Box>

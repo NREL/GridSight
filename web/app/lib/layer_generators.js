@@ -37,6 +37,53 @@ function logTrxClick(object, DATA){
 
 
 
+export function create_styling_object(name){
+
+
+  var styling = {
+    name: name,
+    //Styling options common to all layer types.
+    visible: true,
+    pickable: false,
+
+    pointStyles: {
+      SizeType: 'single',//static or dynamic
+      StaticSources:['static_file_1', 'static_file_2'],
+      StaticSourceColumns: ['column1', 'column2'],
+      DynamicSources:['timeseries_file_1', 'timeseries_file_2'],
+      Size: 1, // if 'single' use as numeric, else, use as index in Sources above
+      Scale: 1,
+      Units: 'meters',//'common', or 'pixels'
+      MinPixels: 0,
+      MaxPixels: 100,
+      pointAntialiasing: true,
+      pointBillboard: false,
+    },
+    // common to all
+    lineStyles: {
+      SizeType: 'single',//static or dynamic
+      StaticSources:['static_file_1', 'static_file_2'],
+      StaticSourceColumns: ['column1', 'column2'],
+      Size:1, //single, Static array, dynamic array,
+      Scale:1,
+      Units:'meters', //'common', or 'pixels'
+      MinPixels:0,
+      MaxPixels:1000,
+      lineMiterLimit:4,
+      lineCapRounded:false,
+      lineJointRounded: false,
+      lineBillboard: false,
+
+    },
+    arcStyles:{
+      sourceColor:[[0,255,0]],
+      targetColor:[[255,0,0]],
+    }
+
+  }
+  return styling
+}
+
 
 export function create_vre_layer(GEO, DATA, selectedGenSet, styling, frameRate){
     // creates a scatter layer with
@@ -87,6 +134,57 @@ export function create_vre_layer(GEO, DATA, selectedGenSet, styling, frameRate){
 }
 
 
+export function create_vre_layer2(GEO, DATA,  styling, frameRate){
+  // creates a scatter layer with
+  // assumes curtailment will be
+
+  const vre_layer = new GeoJsonLayer({
+      id: 'vre',
+      data: GEO,
+      filled: true,
+      visible: styling.visible,
+      lineWidthScale: 250*styling.pointStyles.Scale,
+      lineWidthMinPixels: styling.lineStyles.MinPixels,
+      lineWidthMaxPixels: styling.lineStyles.MaxPixels,
+      lineWidthUnits: styling.lineStyles.Units,
+      getLineWidth: f => transformations.setGeneratorLineWidth(getDataValues(DATA, 'generation', f.properties.GEN_ID), getDataValues(DATA, 'curt', f.properties.GEN_ID), true),
+      getLineColor: transformations.GEN_MAP['Curtailment'],
+      getFillColor: f => transformations.setGeneratorColor(f.properties.TECH),
+      getPointRadius: f => transformations.setGeneratorRadius(getDataValues(DATA, 'generation', f.properties.GEN_ID), getDataValues(DATA, 'curt', f.properties.GEN_ID), true),
+      pointRadiusScale: 250*styling.pointStyles.Scale,
+      pointRadiusMinPixels: styling.pointStyles.MinPixels,
+      pointRadiusMaxPixels: styling.pointStyles.MaxPixels,
+      //pointRadiusUnits:'pixels',
+      pointType:'circle',
+      //opacity: styling.opacity,
+      pickable: true,
+      autoHighlight: true,
+      //onClick: info => logGenClick(info.object, DATA),
+      updateTriggers: {
+          getPointRadius: [DATA, styling.pointStyles.Scale],
+          getLineWidth: [DATA, styling.pointStyles.Scale],
+
+      },
+      transitions:{
+          getPointRadius: {
+              duration: frameRate,
+          },
+          getLineWidth:{
+              duration: frameRate,
+          }
+      },
+      parameters: {
+          depthTest: false,
+        },
+    });
+
+    return vre_layer
+
+}
+
+
+
+
 export function create_gen_layer(GEO, DATA, selectedGenSet, styling, frameRate){
 
     //like vre layer but no curtailment
@@ -126,6 +224,49 @@ export function create_gen_layer(GEO, DATA, selectedGenSet, styling, frameRate){
 
 
 }
+
+
+export function create_gen_layer2(GEO, DATA, styling, frameRate){
+
+  //like vre layer but no curtailment
+
+  const gen_layer = new GeoJsonLayer({
+      id: 'gen',
+      data: GEO,
+      filled: true,
+      visible: styling.visible,
+      getFillColor: f => transformations.setGeneratorColor(f.properties.TECH),
+      getLineColor: [255,255,255],
+      getLineWidth:0,
+      getPointRadius: f => transformations.setGeneratorRadius(getDataValues(DATA, 'generation', f.properties.GEN_ID),0.0, true),
+      pointRadiusScale: 250*styling.pointStyles.Scale,
+      pointRadiusMinPixels: styling.pointStyles.MinPixels,
+      pointRadiusMaxPixels: styling.pointStyles.MaxPixels,
+      pointType:'circle',
+      //opacity: styling.opacity,
+      pickable: true,
+      autoHighlight: true,
+      //onClick: info => logGenClick(info.object, DATA),
+      updateTriggers: {
+          getPointRadius: [DATA, styling.pointStyles.Scale],
+          //getLineWidth: [DATA, selectedGenSet, radiusSlider],
+      },
+      transitions:{
+          getPointRadius: {
+              duration: frameRate,
+          },
+      },
+      parameters: {
+          depthTest: false,
+        },
+    });
+
+  return gen_layer
+
+
+}
+
+
 
 
 export function create_trx_layer(GEO, DATA,voltageFlags, lineWidthSlider, loadingFilter,  frameRate, showLayer, onClickFunc ){
@@ -203,6 +344,63 @@ export function create_trx_arc_layer(GEO, DATA,voltageFlags,styling, frameRate, 
       pickable: true,
       autoHighlight: true,
       onClick: info => logTrxClick(info.object, DATA),
+      //onClick: info => onClickFunc(info),
+      parameters: {
+          depthTest: false,
+      },
+      transitions:{
+          getSourceColor: {
+              duration: frameRate,
+          },
+          getTargetColor:{
+            duration: frameRate,
+          },
+          getWidth:{
+            duration: frameRate
+          }
+      },
+  });
+
+  return trx_layer
+
+}
+
+}
+
+
+
+
+export function create_trx_arc_layer2(GEO, DATA, styling, frameRate ){
+
+  if (GEO){
+    const trx_layer = new ArcLayer({
+      id: 'trx',
+      data: GEO['features'],
+      visible: styling.visible,
+      filled: true,
+      stroked: true,
+      widthScale: styling.lineStyles.Scale,
+      widthMinPixels: styling.lineStyles.MinPixels,
+      widthMaxPixels: styling.lineStyles.MaxPixels,
+      widthUnits: styling.lineStyles.Units,
+      opacity: 1, //styling.opacity,
+      getSourcePosition: d=>d.geometry.coordinates[0],
+      getTargetPosition: d=>d.geometry.coordinates[1],
+
+      getSourceColor: d=> transformations.setFlowColor(getDataValues(DATA, 'flow', d.properties.LINE_ID), d.properties.RATE, 0, -1.0, true),// sets color based on loading and direction
+      getTargetColor: d=> transformations.setFlowColor(getDataValues(DATA, 'flow', d.properties.LINE_ID), d.properties.RATE,  0, 1.0, true),
+
+      getWidth: d => transformations.setLineWidth( getDataValues(DATA, 'flow', d.properties.LINE_ID), true),
+      getHeight: 0,
+
+      updateTriggers: {
+        getSourceColor: [DATA],//, styling.minLoading, styling.showFlow],
+        getTargetColor: [DATA],//, styling.minLoading, styling.showFlow],
+        getWidth: [DATA,  styling.lineStyles.Scale],//voltageFlags,
+      },
+      pickable: true,
+      autoHighlight: true,
+      //onClick: info => logTrxClick(info.object, DATA),
       //onClick: info => onClickFunc(info),
       parameters: {
           depthTest: false,

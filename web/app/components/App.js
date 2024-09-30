@@ -23,8 +23,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LayersIcon from '@mui/icons-material/Layers';
 import MapIcon from '@mui/icons-material/Map';
@@ -35,7 +33,30 @@ import { positions } from '@mui/system';
 import ClockView from './views/ClockView.js'
 import Draggable from 'react-draggable';
 
+import {create_gen_layer2,create_vre_layer2, create_trx_arc_layer2, create_styling_object} from '../lib/layer_generators.js';
+import {loadScenarioGeo, fetchScenarioTimeStep, getScenarioMetadata} from '../lib/loaders.js'
+
 const drawerWidth = 240;
+
+
+//TODOs
+
+///// Layer Style Controls ////
+// Opacity Slider
+// Don't show point styles for Transmission layer
+// Remove props from layer styler
+// Filters for layers
+// Other styling options (rounded lines)
+// Slider for transmission utilization filter.
+
+//// Style clock Controller. ///
+// Enable start and end date functionality for clock
+// Labels for each slider.
+
+//// Style Movable Clock ////
+// Stateful position (keeps resetting)
+// min max position (relative)
+
 
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -94,19 +115,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   }));
 
 
-async function getScenarioMetadata(project, scenario){
 
-    // returns a list of layer object metadata.
-
-    // Data/Timeseries Routes
-    // and color maps styling is passed to
-
-    // layer routes and Data Objects are passed to layer generators.
-
-    const response = await fetch(`/api/${p}/${s}/layers`)
-    const data = await response.json();
-    return data;
-}
 
 
 export function App() {
@@ -125,16 +134,6 @@ export function App() {
     const handleDrawerClose = () => {
       setOpen(false);
     };
-    // Message Bus for sync between tabs/windows.
-    // get metadata showing everything available to the user
-    // User State
-
-    var user = {
-        username: "Demo",
-        AdminRoles:['roleObject'],
-        shared:[], // list of shared resources
-
-    }
 
     // Example Scenario State Object
     var tempScenarioState = {
@@ -157,179 +156,83 @@ export function App() {
 
     //Layer Objects
 
+
+    var gen_styles = create_styling_object('Generation Layer')
+    var trx_styles = create_styling_object('Transmission Layer')
+
+
+    const [layerProps, updateLayerProps] = useState([gen_styles, trx_styles]);
+
+    const [clockState, updateClockState] = useState({
+      startDate: "",
+      endDateL: "",
+      start_index: 1,
+      end_index:8760,
+      index: 5280,
+      frequency: 750,
+      animate: false,
+    })
+
+    const [index, updateIndex] = useState(clockState.index);
     useEffect(()=>{
-        console.log("change in scenario state");
-        console.log(scenarioState);
-        //getScenarioMetadata(scenarioState.project, scenarioState.scenario).then(data=>updateLayerObjects(data));
-    }, [scenarioState])
-
-
-    var scenarioLayerProps = [
-
-        {
-            name:'Gen Layer',
-            gridType: 'VRE or GEN or TRX, etc.',
-            deckType: "GeoJsonLayer",
-            geoPath: '/route/to/geo',
-
-            timeseriesPaths: [
-                {name:'series1', route:'/route/to/timeseries/1' },
-                {name:'series2', route:'/route/to/timeseries/2' },
-            ],
-            // FEATURE REQUEST: add static files that you can style with
-            //
-            staticPaths:'/route/to/static/props',
-
-            //Styling options common to all layer types.
-            visible: true,
-            pickable: false,
-
-            pointStyles: {
-                SizeType: 'single',//static or dynamic
-                StaticSources:['static_file_1', 'static_file_2'],
-                StaticSourceColumns: ['column1', 'column2'],
-                DynamicSources:['timeseries_file_1', 'timeseries_file_2'],
-                Size: 1, // if 'single' use as numeric, else, use as index in Sources above
-                Scale: 1,
-                Units: 'meters',//'common', or 'pixels'
-                MinPixels: 0,
-                MaxPixels: 100,
-                pointAntialiasing: true,
-                pointBillboard: false,
-
-            },
-            // common to all
-            lineStyles: {
-                SizeType: 'single',//static or dynamic
-                StaticSources:['static_file_1', 'static_file_2'],
-                StaticSourceColumns: ['column1', 'column2'],
-                Size:1, //single, Static array, dynamic array,
-                Scale:1,
-                Units:'meters', //'common', or 'pixels'
-                MinPixels:0,
-                MaxPixels:1000,
-                lineMiterLimit:4,
-                lineCapRounded:false,
-                lineJointRounded: false,
-                lineBillboard: false,
-
-            },
-            arcStyles:{
-                sourceColor:[[0,255,0]],
-                targetColor:[[255,0,0]],
-            },
-
-            // Custom Stylings
-            // TRX utlization threshold
-            //
-            additionalStyling:{
-                property1: ['test']
-            },
-            // create a set of dynamic filters based on
-            // properties in geojson.
-            filters:{
-                property1: ['test']
-            },
-
-        },
-
-        {
-            name:'TRX Layer',
-            gridType: 'VRE or GEN or TRX, etc.',
-            deckType: 'ArcLayer',
-            geoPath: '/route/to/geo',
-
-            timeseriesPaths: [
-                {name:'series1', route:'/route/to/timeseries/1' },
-                {name:'series2', route:'/route/to/timeseries/2' },
-            ],
-            // FEATURE REQUEST: add static files that you can style with
-            //
-            staticPaths:'/route/to/static/props',
-
-            //Styling options common to all layer types.
-            visible: true,
-            pickable: false,
-            pointStyles: {
-                Source: 'single',//static or dynamic
-                StaticSources:['static_file_1', 'static_file_2'],
-                StaticSourceColumns: ['column1', 'column2'],
-                DynamicSources:['timeseries_file_1', 'timeseries_file_2'],
-                Size: 1, // if 'single' use as numeric, else, use as index in Sources above
-                Scale: 1,
-                Units: 'meters',//'common', or 'pixels'
-                MinPixels: 0,
-                MaxPixels: 100,
-                pointAntialiasing: true,
-                pointBillboard: false,
-
-            },
-            // common to all
-            lineStyles: {
-                Source: 'single',//static or dynamic
-                StaticSources:['static_file_1', 'static_file_2'],
-                StaticSourceColumns: ['column1', 'column2'],
-                Size:1, //single, Static array, dynamic array,
-                Scale:1,
-                Units:'meters', //'common', or 'pixels'
-                MinPixels:0,
-                MaxPixels:1000,
-                lineMiterLimit:4,
-                lineCapRounded:false,
-                lineJointRounded: false,
-                lineBillboard: false,
-
-            },
-            arcStyles:{
-                sourceColor:[[0,255,0]],
-                targetColor:[[255,0,0]],
-            },
-
-            // Custom Stylings
-            // TRX utlization threshold
-            //
-            additionalStyling:{
-                property1: ['test']
-            },
-            // create a set of dynamic filters based on
-            // properties in geojson.
-            filters:{
-                property1: ['test']
-            },
-
-        },
-
-
-    ]
-
-
-    const [layerProps, updateLayerProps] = useState(scenarioLayerProps);
-
-    // Clock State (and index)
-    var clockState = {
-        startDate: "",
-        endDate: "",
-        playbackFrequency: 500, //ms between timesteps
-        index: 0
-    }
-
-
-    const [currentTime, updateCurrentTime] = useState(150);
-
-    //Animate timestep
-    const [animate, showAnimate] = useState(true);
-    const frameRate = 50;
-
-
+      updateIndex(clockState.index)
+    },[clockState.index])
     useEffect(() => {
-        const interval = setInterval(() => {
-        if (animate) {
-                //console.log("updating time")
-                updateCurrentTime((currentTime) => currentTime + 0.01);
-              }
-            }, frameRate);
-            return () => clearInterval(interval);
-          }, [animate]);
+      const interval = setInterval(() => {
+      if (clockState.animate) {
+              updateIndex((index)=>index+1);
+            }
+          }, clockState.frequency);
+          return () => clearInterval(interval);
+        }, [clockState.animate]);
+
+    useEffect(()=>{
+          if (index > clockState.end_index){
+              updateIndex(clockState.start_index)
+              updateClockState({...clockState, index: clockState.start_index})
+          }
+          else{
+              updateClockState({...clockState, index: index})
+          }
+      }, [index])
+
+    const [DATA, setData] = useState({})
+    const [TRX, updateTRX] = useState();
+    const [VRE, updateVRE] = useState();
+    const [GEN, updateGEN] = useState();
+
+    useEffect(()=> {
+      loadScenarioGeo(scenarioState.project, scenarioState.scenario, 'transmission_map.geojson').then(data=> {updateTRX(data) ;});
+      loadScenarioGeo(scenarioState.project, scenarioState.scenario,'vre_locs.geojson').then(data=> {updateVRE(data) ;});
+      loadScenarioGeo(scenarioState.project, scenarioState.scenario,'nonvre_locs.geojson').then(data=> {updateGEN(data);})
+    },[scenarioState.scenario])
+
+    const trx_layer = create_trx_arc_layer2(TRX, DATA, layerProps[1], clockState.frequency )
+    const vre_layer = create_vre_layer2(VRE, DATA, layerProps[0], clockState.frequency)
+    const gen_layer = create_gen_layer2(GEN, DATA, layerProps[0], clockState.frequency )
+
+    const layers = [trx_layer, gen_layer, vre_layer]
+
+    const [currentTime, setCurrentTime] = useState(150);
+    useEffect(() => {
+      //setLoading(true)
+
+      fetchScenarioTimeStep(scenarioState.project, scenarioState.scenario, clockState.index).then(data =>{
+
+        setData(data)
+        var currentTime = 0
+        if ('DateTime' in data['generation']){
+          var currentTime = data['generation']['DateTime'].split('.')[0]
+        }
+        else if ('Timestamp' in data['generation']){
+          var currentTime = data['generation']['Timestamp'].split('.')[0]
+        }
+
+        setCurrentTime(currentTime)
+      })
+    }, [scenarioState.scenario, clockState.index]);
+
+
 
     const [viewState, setViewState] = useState({
         latitude: 39.0,
@@ -362,6 +265,7 @@ export function App() {
 
     const listIcons = [<AnalyticsIcon/>,<LayersIcon/>, <MapIcon/>,  <AccessTimeIcon/>]
     const listIconsBottom = [<ManageAccountsIcon/>, <SettingsIcon/>]
+
     return (
         <Box sx={{ display: 'flex' }}>
         <CssBaseline />
@@ -434,7 +338,7 @@ export function App() {
             controller={deckControl}
             useDevicePixels={true}
             initialViewState={viewState}
-            //layers={[...staticlayers]}
+            layers={layers}
             viewState={viewState}
             onViewStateChange={evt => setViewState(evt.viewState)}
 
@@ -453,13 +357,17 @@ export function App() {
                 onScenarioChange={onSChange}
                 layerProps={layerProps}
                 onLayerPropChange={(val)=>updateLayerProps(val)}
+                clockState={clockState}
+                onClockChange={updateClockState}
             />
             </Box>
             }
 
             <Draggable defaultPosition={{x: 500, y: 500}} disabled={open} onStart={()=>setDeckControl(false)} onStop={()=>setDeckControl(true)}>
-            <Box sx={{maxWidth: drawerWidth*3.5,maxHeight:'85%', color: '#000000', bgcolor: '#e2e2e2' }}>
-              <ClockView/>
+            <Box sx={{width:'17%', color: '#d44811', bgcolor: '#00000000' }}>
+              <h1>
+                {currentTime}
+              </h1>
             </Box>
             </Draggable>
             </DeckGL>
