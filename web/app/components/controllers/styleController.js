@@ -8,7 +8,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { FormGroup } from '@mui/material';
+import { FormGroup, Typography } from '@mui/material';
 import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 
@@ -36,7 +36,7 @@ export function CommonStyleController({type, props, onChange}){
 
     const handleScaleChange = (event) => {
         var newProps = props;
-        newProps.Scale = event.target.value;
+        newProps.Scale = parseInt(event.target.value);
         onChange(newProps);
     }
 
@@ -49,20 +49,23 @@ export function CommonStyleController({type, props, onChange}){
     const handleMinPixelChange = (event) => {
         // default 0
         var newProps = props;
-        newProps.MinPixels = event.target.value;
+        newProps.MinPixels = parseInt(event.target.value);
         onChange(newProps);
     }
 
     const handleMaxPixelChange = (event) => {
         var newProps = props;
-        newProps.MaxPixels = event.target.value;
+        newProps.MaxPixels = parseInt(event.target.value);
         onChange(newProps);
     }
 
     return (
         <Box >
-            <Divider/>
-            <h2>{type} Styling </h2>
+            <Stack direction="column" spacing={1}>
+            <Typography variant='h5' align='center'>
+                {type} Sizing
+            </Typography>
+                {false &&
                 <FormControl>
                     <FormLabel id="radius-size-buttons"><h2>{name} Type</h2></FormLabel>
                     <RadioGroup
@@ -77,8 +80,16 @@ export function CommonStyleController({type, props, onChange}){
                     <FormControlLabel value="animated" control={<Radio />} label='Animated'/>
                     </RadioGroup>
                 </FormControl>
+                }
 
-                <h3>Scaling</h3>
+                <Stack direction="row" spacing={2}>
+                    <Box>
+                        <Typography type='h6' align='center'>
+                            Scale Factor
+                        </Typography>
+                    </Box>
+                    <Slider aria-label="Scale" value={props.Scale} onChange={handleScaleChange}/>
+                </Stack>
                 <Stack spacing={2} direction="row" sx={{alignItems: 'center', mb:1}}>
                 <TextField
                 label="Min Pixels"
@@ -119,11 +130,29 @@ export function CommonStyleController({type, props, onChange}){
                 </FormControl>
 
                 </Stack>
-                <Slider aria-label="Scale" value={props.Scale} onChange={handleScaleChange}/>
+
+                </Stack>
         </Box>
     )
 
 
+}
+
+export function AdditionalStyleController({props, onChange}){
+
+    return (
+        <Box>
+            <Typography variant='h5' align='center'>
+                Additional Styling
+            </Typography>
+            <Stack>
+                <FormControl></FormControl>
+            </Stack>
+            <Box>
+                {JSON.stringify(props)}
+            </Box>
+        </Box>
+    )
 }
 
 
@@ -143,18 +172,25 @@ export function StyleController({props, onChange}){
         newProps.lineStyles = newLineStyleProps;
         onChange(newProps);
     };
+
+    function onAdditionalChange(newAdditionalProps){
+        var newProps = props;
+        newProps.additional = newAdditionalProps;
+        onChange(newProps);
+    }
     // Need a way to save all these settings.
 
     // ERROR radio group is not "controlled" because of undefined inputs.
     return (
         <Box >
+            <Stack direction="column" spacing={1}>
+            <Divider/>
             <CommonStyleController type={'Point'} props={props.pointStyles} onChange={onPointStyleChange}/>
-            <h3>Additional Point Styling</h3>
-            <br/>
+            <Divider/>
             <CommonStyleController type= {'Line'} props={props.lineStyles} onChange={onLineStyleChange}/>
-            <h3>Additiona Line Styling</h3>
-            <h3>Arc Styling</h3>
-
+            <Divider/>
+            <AdditionalStyleController props={props.additional} onChange={onAdditionalChange}/>
+            </Stack>
         </Box>
     )
 }

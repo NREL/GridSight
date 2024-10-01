@@ -36,8 +36,8 @@ export default function LayerStyler({layerProp, onLayerPropChange}){
         <div>
         <Tabs value={value} onChange={handleChange} aria-label="Styling Tabs">
             <Tab icon={<PaletteIcon/>} aria-label="Styling"/>
-            <Tab icon={<FilterAltIcon/>} aria-label="Filters"/>
-            <Tab icon={<BuildIcon/>} aria-label="Advanced"/>
+            <Tab icon={<FilterAltIcon/>} aria-label="Filters" disabled/>
+            <Tab icon={<BuildIcon/>} aria-label="Advanced" disabled/>
         </Tabs>
         <div>
             {showStyles &&
@@ -46,10 +46,6 @@ export default function LayerStyler({layerProp, onLayerPropChange}){
             {showFilters &&
             <FilterController/>
             }
-        </div>
-        <br/>
-        <div>
-            {JSON.stringify(layerProp)}
         </div>
         </div>
     )

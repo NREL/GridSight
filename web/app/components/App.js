@@ -34,7 +34,7 @@ import ClockView from './views/ClockView.js'
 import Draggable from 'react-draggable';
 
 import {create_gen_layer2,create_vre_layer2, create_trx_arc_layer2, create_styling_object} from '../lib/layer_generators.js';
-import {loadScenarioGeo, fetchScenarioTimeStep, getScenarioMetadata} from '../lib/loaders.js'
+import {loadScenarioGeo, fetchScenarioTimeStep,fetchDateRange, getScenarioMetadata} from '../lib/loaders.js'
 
 const drawerWidth = 240;
 
@@ -52,9 +52,9 @@ const drawerWidth = 240;
 //// Style clock Controller. ///
 // Enable start and end date functionality for clock
 // Labels for each slider.
+// Start and End Date should update the start_index, index, and end_index
 
 //// Style Movable Clock ////
-// Stateful position (keeps resetting)
 // min max position (relative)
 
 
@@ -164,14 +164,17 @@ export function App() {
     const [layerProps, updateLayerProps] = useState([gen_styles, trx_styles]);
 
     const [clockState, updateClockState] = useState({
-      startDate: "",
-      endDateL: "",
-      start_index: 1,
+      timestamps:[],
+      startDate: "2024-04-08T00:00",
+      endDate: "2024-04-08T23:55",
+      start_index: 0,
       end_index:8760,
       index: 5280,
       frequency: 750,
       animate: false,
+      showClock: false
     })
+
 
     const [index, updateIndex] = useState(clockState.index);
     useEffect(()=>{
@@ -205,6 +208,18 @@ export function App() {
       loadScenarioGeo(scenarioState.project, scenarioState.scenario, 'transmission_map.geojson').then(data=> {updateTRX(data) ;});
       loadScenarioGeo(scenarioState.project, scenarioState.scenario,'vre_locs.geojson').then(data=> {updateVRE(data) ;});
       loadScenarioGeo(scenarioState.project, scenarioState.scenario,'nonvre_locs.geojson').then(data=> {updateGEN(data);})
+
+      fetchDateRange(scenarioState.project, scenarioState.scenario).then(data=>{
+        var arr_len = data.DateTime.length;
+        updateClockState({...clockState,
+          //timestamps: data.DateTime,
+          startDate: data.DateTime[0],
+          endDate: data.DateTime[arr_len-1],
+          end_index: arr_len - 1,
+          index: 1
+
+
+        })});
     },[scenarioState.scenario])
 
     const trx_layer = create_trx_arc_layer2(TRX, DATA, layerProps[1], clockState.frequency )
@@ -265,6 +280,13 @@ export function App() {
 
     const listIcons = [<AnalyticsIcon/>,<LayersIcon/>, <MapIcon/>,  <AccessTimeIcon/>]
     const listIconsBottom = [<ManageAccountsIcon/>, <SettingsIcon/>]
+
+
+    const [clockPosition, updateClockPosition] = useState({x:700, y:175})
+    const handleDragStop = (event)=>{
+      setDeckControl(true)
+      updateClockPosition({x: event.layerX, y: event.layerY});
+    };
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -363,13 +385,15 @@ export function App() {
             </Box>
             }
 
-            <Draggable defaultPosition={{x: 500, y: 500}} disabled={open} onStart={()=>setDeckControl(false)} onStop={()=>setDeckControl(true)}>
+            {clockState.showClock &&
+            <Draggable defaultPosition={clockPosition}  onStart={()=>setDeckControl(false)} onStop={handleDragStop}>
             <Box sx={{width:'17%', color: '#d44811', bgcolor: '#00000000' }}>
               <h1>
                 {currentTime}
               </h1>
             </Box>
             </Draggable>
+            }
             </DeckGL>
         </Main>
 

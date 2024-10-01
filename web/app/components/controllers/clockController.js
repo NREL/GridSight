@@ -1,40 +1,36 @@
-//'use client';
+'use client';
 
 import React, {useState, useEffect, use} from 'react';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
-import { DatePicker } from '@mui/x-date-pickers';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import IconButton from '@mui/material/IconButton';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Divider from '@mui/material/Divider';
+import Switch from '@mui/material/Switch';
 
 export default function ClockController({props, onChange}){
 
-
-    // Time State includes
-    // start date
-    // end date
-    // frequency (hourly, 15 minute)
-    // refresh rate
-
+    // TODO
+    // Show, hide Movable clock
+    // Sync between selected date range, and min/max index
+    // Synce between min/max slider vals, and min/max date range
+    // Value hover should be datetime.
 
     function valuetext(value) {
         return `${value} Index`;
     }
 
-
-    //const [slideVals, updateSlideVals] = useState([props.start_index, props.index, props.end_index])
     const handleSlideChange= (event, newValue)=>{
         onChange({...props, start_index: newValue[0], index:newValue[1], end_index:newValue[2]});
-        //updateIndex(newValue[1]);
     };
 
     const incrementIndex = (event, val)=>{
@@ -47,8 +43,6 @@ export default function ClockController({props, onChange}){
         onChange({...props, index: newIndex})
     }
 
-
-    //const [frequency, updateFrequency] = useState(750);
     const handleFrequencyChange = (event, new_frequency)=>{
         onChange({...props, frequency: new_frequency})
     };
@@ -56,26 +50,42 @@ export default function ClockController({props, onChange}){
 
     const [index, updateIndex] = useState(props.index);
 
+    const [selectedDateRange, updateDateRange] = useState({start: dayjs(props.startDate), end: dayjs(props.endDate)})
+
     useEffect(()=>{
         updateIndex(props.index)
     }, [props.index])
 
-    //useEffect(()=>{
-    //    onChange({...props, index: index})
-    //},[index])
-
-
+    const handleClockSwitch = (event)=>{
+        onChange({...props, showClock: event.target.checked})
+    };
     return (
     <Box sx={{minWidth: 600, alignItems: 'center', margin:"1%"}}>
         <Stack direction="column" spacing={2} sx={{width:"95%",  margin: "1%"}}>
-            <h2>Time & Animation</h2>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Box>
+                <Typography variant='h4' align='center'>
+                Animation
+                </Typography>
+            </Box>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Stack direction="row" spacing={2}>
-            <DatePicker label = "Start Date"/>
-            <DatePicker label = "End Date"/>
+            <DateTimePicker
+            label="Start Date"
+            value={selectedDateRange.start}
+            minDateTime ={dayjs(props.startDate)}
+            maxDateTime={dayjs(props.endDate)}
+            onChange={(newValue) => updateDateRange({...selectedDateRange, start:newValue})}
+            />
+            <DateTimePicker
+            label="End Date"
+            value={selectedDateRange.end}
+            minDateTime ={dayjs(props.startDate)}
+            maxDateTime={dayjs(props.endDate)}
+            onChange={(newValue) => updateDateRange({...selectedDateRange, end:newValue})}
+            />
             </Stack>
             </LocalizationProvider>
-            <Box>
+
             <Slider
             getAriaLabel={() => "Playback Window"}
             value={[props.start_index, index, props.end_index]}
@@ -84,9 +94,14 @@ export default function ClockController({props, onChange}){
             valueLabelDisplay="auto"
             disableSwap
             getAriaValueText={valuetext}
-            min={0} max={8760} step={1}
+            min={props.start_index} max={props.end_index} step={1}
             sx={{width:"95%", alignItems: 'center', justifyContent:'center', margin: "1%"}}
             />
+            <Divider variant="middle" />
+            <Box>
+                <Typography variant='h5' align='center'>
+                Playback
+                </Typography>
             </Box>
             <Box sx={{minWidth: 500 , alignItems: 'center', justifyContent:'center'}}>
             <Stack direction="row" spacing={2} sx={{justifyContent: "center",alignItems: "center",}}>
@@ -119,6 +134,16 @@ export default function ClockController({props, onChange}){
                 max={2000}
                 step={10}
             />
+            <Divider variant="middle" />
+            <Stack direction="row" spacing={1}>
+                <Switch size='medium' checked={props.showClock} onChange={handleClockSwitch}/>
+                <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                    <Typography variant='h6' align='center'>
+                        Show Clock
+                    </Typography>
+                </Box>
+
+            </Stack>
         </Stack>
     </Box>
     )

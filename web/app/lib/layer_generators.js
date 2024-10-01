@@ -45,7 +45,9 @@ export function create_styling_object(name){
     //Styling options common to all layer types.
     visible: true,
     pickable: false,
-
+    autoHighlight: true,
+    filled: true,
+    opacity: 0.8,
     pointStyles: {
       SizeType: 'single',//static or dynamic
       StaticSources:['static_file_1', 'static_file_2'],
@@ -58,6 +60,7 @@ export function create_styling_object(name){
       MaxPixels: 100,
       pointAntialiasing: true,
       pointBillboard: false,
+      stroked:true,
     },
     // common to all
     lineStyles: {
@@ -75,9 +78,13 @@ export function create_styling_object(name){
       lineBillboard: false,
 
     },
-    arcStyles:{
-      sourceColor:[[0,255,0]],
-      targetColor:[[255,0,0]],
+
+    additional: {
+      pickable: false,
+      autoHighlight: true,
+      opacity: 0.8,
+      filled: true,
+      stroked: true,
     }
 
   }

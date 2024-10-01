@@ -65,6 +65,16 @@ def getScenarioTimestep(project, scenario, index):
 
     return json.dumps({'generation':gen_df.row(index, named=True), 'flow':flow_df.row(index, named=True), 'curt':curt_df.row(index, named=True)}, default=str)
 
+@registry.handles(
+    rule='/api/timestep/<string:project>/<string:scenario>',
+    method='GET',
+    authenticators=authenticator
+)
+def getScenarioDateRange(project, scenario):
+
+    dates = s3handler.get_scenario_timestamps(project, scenario, 'generators.parquet')
+    return json.dumps({'DateTime':dates}, default=str)
+
 
 @registry.handles(
     rule='/api/dispatch/<string:project>/<string:scenario>/meta',

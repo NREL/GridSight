@@ -10,6 +10,12 @@ export async function loadScenarioGeo(project, scenario, filename) {
 
 
 
+export async function fetchDateRange(project, scenario){
+  const response = await fetch(`/api/timeseries/${project}/${scenario}`);
+  const data = await response.json();
+  return data
+}
+
 export async function fetchScenarioTimeStep(project, scenario, index){
 
     const response = await fetch(`/api/timeseries/${project}/${scenario}/${index}`)

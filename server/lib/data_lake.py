@@ -60,6 +60,13 @@ class S3Handler:
             "layers": self.s3.find(f'{self.bucket_name}/{project}/{scenario}') # list of layers
         }
 
+    def get_scenario_timestamps(self, project, scenario, file_name):
+
+        with self.s3.open(f"{self.bucket_name}/{project}/{scenario}/timeseries/{file_name}", 'rb') as f:
+            df = pd.read_parquet(f).reset_index()
+
+            return df["DateTime"].to_list()
+
 
     @lru_cache(maxsize=10)
     def get_dataframe(self, project, scenario, file_name):

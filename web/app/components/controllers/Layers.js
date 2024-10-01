@@ -10,6 +10,9 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
+//import Divider from '@mui/material/Divider';
+//import { ThemeProvider } from '@mui/material/styles';
+
 
 export default function LayerFactory({AllLayersProps, updateAllLayerProps}){
 
@@ -47,16 +50,22 @@ export default function LayerFactory({AllLayersProps, updateAllLayerProps}){
 
     // Passes the prop into each indivual layer object
     return (
-        <Box sx={{width: 800, maxHeight:1200, overflow: 'hidden', overflowY: "scroll"}}>
-            <h2>Layer Styles</h2>
+
+        <Box sx={{width: 800, maxHeight:1200, overflow: 'hidden', overflowY: "scroll", borderRadius: 2}}>
+            <Typography variant='h3' align='center'>
+                Layer Styles
+            </Typography>
             {
             AllLayersProps.map((layer, index)=>(
-                <Stack spacing={2} direction="row" sx={{alignItems: 'center', mb:1, width: '98%', maxHeight:'85%' }}>
+                <Stack spacing={2} direction="row" sx={{alignItems: 'center', ml:1, mb:1, width: '98%', maxHeight:'85%' }}>
                 <Accordion sx={{width:'85%'}}>
 
                     <AccordionSummary
                     expandIcon={<ArrowDropDownIcon/>}>
-                    {layer.name}
+                        <Typography variant='h5' align='center'>
+                            {layer.name}
+                        </Typography>
+
                     </AccordionSummary>
                     <AccordionDetails >
                         <Box sx={{ maxHeight:'80%'}}>
@@ -76,6 +85,7 @@ export default function LayerFactory({AllLayersProps, updateAllLayerProps}){
             ))
         }
         </Box>
+
     )
 
 

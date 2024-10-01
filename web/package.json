@@ -20,6 +20,7 @@
     "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-plugin-zoom": "^2.0.1",
     "date-fns": "^2.30.0",
+    "dayjs": "^1.11.13",
     "deck.gl": "^9.0.12",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
