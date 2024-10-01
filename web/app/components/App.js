@@ -35,27 +35,31 @@ import Draggable from 'react-draggable';
 
 import {create_gen_layer2,create_vre_layer2, create_trx_arc_layer2, create_styling_object} from '../lib/layer_generators.js';
 import {loadScenarioGeo, fetchScenarioTimeStep,fetchDateRange, getScenarioMetadata} from '../lib/loaders.js'
+import * as transformations from '../lib/transformations.js';
 
 const drawerWidth = 240;
 
 
 //TODOs
+// Upgrade Static Map (use mapbox token and see if it works)
+// Take not of static map version in case to revert.
+// General theme for Various trays
+// Rounded edges for outer book
+// header banner with different color.
+
 
 ///// Layer Style Controls ////
-// Opacity Slider
 // Don't show point styles for Transmission layer
-// Remove props from layer styler
 // Filters for layers
-// Other styling options (rounded lines)
+// Numeric filter for utilization.
+// If enabled use utilization array and soft range
+
 // Slider for transmission utilization filter.
 
 //// Style clock Controller. ///
 // Enable start and end date functionality for clock
 // Labels for each slider.
 // Start and End Date should update the start_index, index, and end_index
-
-//// Style Movable Clock ////
-// min max position (relative)
 
 
 
@@ -124,7 +128,13 @@ export function App() {
     const [deckControl, setDeckControl] = useState(true);
 
     useEffect(()=>{
-      setDeckControl(!open)
+      if (open){
+        setDeckControl(false)
+      }
+      else {
+        setDeckControl(true)
+      }
+
     }, [open])
 
     const handleDrawerOpen = () => {
@@ -157,11 +167,7 @@ export function App() {
     //Layer Objects
 
 
-    var gen_styles = create_styling_object('Generation Layer')
-    var trx_styles = create_styling_object('Transmission Layer')
 
-
-    const [layerProps, updateLayerProps] = useState([gen_styles, trx_styles]);
 
     const [clockState, updateClockState] = useState({
       timestamps:[],
@@ -170,6 +176,8 @@ export function App() {
       start_index: 0,
       end_index:8760,
       index: 5280,
+      min_index:0,
+      max_index:8760,
       frequency: 750,
       animate: false,
       showClock: false
@@ -204,6 +212,38 @@ export function App() {
     const [VRE, updateVRE] = useState();
     const [GEN, updateGEN] = useState();
 
+
+    var gen_styles = create_styling_object('Generation Layer')
+    var trx_styles = create_styling_object('Transmission Layer')
+
+    const [layerProps, updateLayerProps] = useState([gen_styles, trx_styles]);
+
+    /// Update Available layer filters
+    /// TODO make this generic for each layer (variable number of layers)
+    useEffect(()=>{
+
+      if (GEN){
+        var newLayerProps =  layerProps;
+        const newGenerationOptions = transformations.createFlags(GEN,'TECH');
+        const newVREOptions = transformations.createFlags(VRE, 'TECH')
+        var newGenOptions = [...newGenerationOptions, ...newVREOptions]
+        newLayerProps[0].filters.allCategories = newGenOptions;
+        updateLayerProps(newLayerProps);
+
+      }
+    }, [GEN,VRE])
+
+    useEffect(()=>{
+
+      if (TRX){
+        var newLayerProps =  layerProps;
+        const newVoltageOptions = transformations.createFlags(TRX,'TO_VN');
+        newLayerProps[1].filters.allCategories = newVoltageOptions;
+        updateLayerProps(newLayerProps);
+      }
+    }, [TRX])
+
+
     useEffect(()=> {
       loadScenarioGeo(scenarioState.project, scenarioState.scenario, 'transmission_map.geojson').then(data=> {updateTRX(data) ;});
       loadScenarioGeo(scenarioState.project, scenarioState.scenario,'vre_locs.geojson').then(data=> {updateVRE(data) ;});
@@ -216,9 +256,10 @@ export function App() {
           startDate: data.DateTime[0],
           endDate: data.DateTime[arr_len-1],
           end_index: arr_len - 1,
-          index: 1
-
-
+          max_index: arr_len -1,
+          start_index: 0,
+          min_index: 0,
+          index: 1,
         })});
     },[scenarioState.scenario])
 

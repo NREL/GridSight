@@ -20,6 +20,13 @@ export default function LayerStyler({layerProp, onLayerPropChange}){
         setValue(newValue);
     };
 
+
+    function onFilterChange(newFilterProps){
+        var newProps = layerProp;
+        newProps.filters = newFilterProps;
+        onLayerPropChange(newProps);
+    }
+
     useEffect(()=>{
         console.log("value changed");
         if (value === 0){
@@ -36,15 +43,15 @@ export default function LayerStyler({layerProp, onLayerPropChange}){
         <div>
         <Tabs value={value} onChange={handleChange} aria-label="Styling Tabs">
             <Tab icon={<PaletteIcon/>} aria-label="Styling"/>
-            <Tab icon={<FilterAltIcon/>} aria-label="Filters" disabled/>
+            <Tab icon={<FilterAltIcon/>} aria-label="Filters"/>
             <Tab icon={<BuildIcon/>} aria-label="Advanced" disabled/>
         </Tabs>
         <div>
             {showStyles &&
-            <StyleController props={layerProp} onChange={(val)=>onLayerPropChange(val)}/>
+            <StyleController props={layerProp} onChange={onLayerPropChange}/>
             }
             {showFilters &&
-            <FilterController/>
+            <FilterController props={layerProp.filters} onChange={(val)=>onFilterChange(val)}/>
             }
         </div>
         </div>

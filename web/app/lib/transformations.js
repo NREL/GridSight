@@ -79,14 +79,21 @@ export const COLOR_MAP = {
 
 export function createFlags(geojson, property){
     console.log("processing flags")
-    var flags = {};
-    var features = geojson['features'];
-    for(var index in features){
+    var flags = new Set();
 
-        var flag = features[index].properties[property]
-        flags[flag] = true
+    if (geojson){
+        var features = geojson['features'];
+        for(var index in features){
+
+            var flag = features[index].properties[property]
+            flags.add(flag);
+        }
+
+
+
     }
-    return flags;
+    return [...flags];
+
 
 }
 
@@ -176,31 +183,25 @@ export function setGeneratorColor(gen_type){
     return GEN_MAP[gen_type]
 }
 
-export function setGeneratorRadius(gen_mw, curt_mw, selected_gen){
+export function setGeneratorRadius(gen_mw, curt_mw){
 
-    if (selected_gen){
-        var tot_mw = gen_mw + curt_mw;
-        var outer_radius = Math.sqrt(tot_mw/Math.PI) //r2
-        return outer_radius
-    }
-    else {
-        return 0.0
-    }
+
+    var tot_mw = gen_mw + curt_mw;
+    var outer_radius = Math.sqrt(tot_mw/Math.PI) //r2
+    return outer_radius
 
   }
 
-export function setGeneratorLineWidth(gen_mw, curt_mw, selected_gen) {
+export function setGeneratorLineWidth(gen_mw, curt_mw) {
 
-    if(selected_gen){
+
         var tot_mw = gen_mw + curt_mw;
         var outer_radius = Math.sqrt(tot_mw/Math.PI) //r2
         var inner_radius = Math.sqrt(gen_mw/Math.PI)
         var radius_diff = outer_radius - inner_radius
         return radius_diff;
-    }
-    else {
-        return 0.0
-    }
+
+
   };
 
 

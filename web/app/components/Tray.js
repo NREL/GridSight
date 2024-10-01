@@ -4,7 +4,6 @@ import ClockController from "./controllers/clockController";
 import ScenarioPicker from "./controllers/Scenarios";
 import LayerFactory from "./controllers/Layers";
 import Box from '@mui/material/Box';
-import './tray.css'
 
 const trayWidth = 500;
 

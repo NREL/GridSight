@@ -8,10 +8,11 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { FormGroup, Typography } from '@mui/material';
+import { Checkbox, FormGroup, ListItemText, MenuItem, Select, Typography } from '@mui/material';
 import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
-
+import InputLabel from '@mui/material/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 
 export function CommonStyleController({type, props, onChange}){
@@ -140,17 +141,53 @@ export function CommonStyleController({type, props, onChange}){
 
 export function AdditionalStyleController({props, onChange}){
 
+    const handleFlagChange = (event)=>{
+        onChange({...props, [event.target.name]: event.target.checked})
+    }
+
+    const handleSlideChange = (event)=>{
+        onChange({...props, opacity: event.target.value})
+    }
+
     return (
         <Box>
             <Typography variant='h5' align='center'>
                 Additional Styling
             </Typography>
-            <Stack>
-                <FormControl></FormControl>
+            <Stack direction="row">
+                <FormControl component="fieldset" variant='standard'>
+                    <FormLabel component="legend">Flags</FormLabel>
+                    <FormGroup>
+                        <FormControlLabel
+                        control={<Switch checked={props.pickable} onChange={handleFlagChange} name="pickable"/>}
+                        label="Pickable"
+                        />
+                        <FormControlLabel
+                        control={<Switch checked={props.autoHighlight} onChange={handleFlagChange} name="autoHighlight"/>}
+                        label= "Auto-Highlight"
+                        />
+                        <FormControlLabel
+                        control={<Switch checked={props.filled} onChange={handleFlagChange} name='filled'/>}
+                        label = "Filled"
+                        />
+                        <FormControlLabel
+                        control={<Switch checked={props.stroked} onChange={handleFlagChange} name='stroked'/>}
+                        label= "Stroked"
+                        />
+
+                    </FormGroup>
+                </FormControl>
+                <Box>
+                    <Stack direction='column' spacing={2} height={'100%'}>
+                    <Typography align='center'>
+                        Opacity
+                    </Typography>
+                    <Slider aria-label='Opacity' orientation='vertical' value={props.opacity} step={0.01} min={0} max={1} onChange={handleSlideChange}/>
+                    </Stack>
+                </Box>
+
+
             </Stack>
-            <Box>
-                {JSON.stringify(props)}
-            </Box>
         </Box>
     )
 }
@@ -178,6 +215,7 @@ export function StyleController({props, onChange}){
         newProps.additional = newAdditionalProps;
         onChange(newProps);
     }
+
     // Need a way to save all these settings.
 
     // ERROR radio group is not "controlled" because of undefined inputs.
@@ -198,10 +236,81 @@ export function StyleController({props, onChange}){
 
 
 
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+
 export function FilterController({props, onChange}){
 
+    const handleFlagChange = (event)=>{
+        onChange({...props, [event.target.name]: event.target.checked})
+    }
+
+    const handleFilterChange = (event)=>{
+
+        const {
+            target: {value},
+        } = event;
+        onChange({...props, filterCategories: value})
+        //var selectedCategories = props.filterCategories;
+        //selectedCategories.push(event.target.value[0])
+
+        //onChange({...props, filterCategories: selectedCategories})
+
+    }
 
     return (
-        <div>Filter controller content goes here</div>
+            <Box sx={{m:1}}>
+            <Divider sx={{m:2}}/>
+            <Stack direction="row" spacing={2}>
+                <FormControl component="fieldset" variant='standard'>
+                    <FormLabel component="legend">Flags</FormLabel>
+                    <FormGroup>
+                        <FormControlLabel
+                        control={<Switch checked={props.enabled} onChange={handleFlagChange} name="enabled"/>}
+                        label="Enable Filter"
+                        />
+                        <FormControlLabel
+                        control={<Switch checked={props.transformSize} onChange={handleFlagChange} name="transformSize"/>}
+                        label= "Transform Size"
+                        />
+                        <FormControlLabel
+                        control={<Switch checked={props.transformColor} onChange={handleFlagChange} name='transformColor'/>}
+                        label = "Transform Color"
+                        />
+
+
+                    </FormGroup>
+                </FormControl>
+                <FormControl sx={{m:1, width: 400}}>
+                    <InputLabel>Filtered</InputLabel>
+                    <Select
+                        multiple
+                        value={props.filterCategories}
+                        onChange={handleFilterChange}
+                        input={<OutlinedInput label="Selected" />}
+                        renderValue={(selected) => selected.join(', ')}
+                        MenuProps={MenuProps}
+                    >
+                    {props.allCategories.map((category)=> (
+                        <MenuItem key={category} value={category}>
+                            <Checkbox checked={props.filterCategories.includes(category)}/>
+                            <ListItemText primary={category}/>
+                        </MenuItem>
+                    ))}
+                    </Select>
+                </FormControl>
+
+            </Stack>
+        </Box>
     )
 }

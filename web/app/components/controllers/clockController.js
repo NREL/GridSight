@@ -94,7 +94,7 @@ export default function ClockController({props, onChange}){
             valueLabelDisplay="auto"
             disableSwap
             getAriaValueText={valuetext}
-            min={props.start_index} max={props.end_index} step={1}
+            min={props.min_index} max={props.max_index} step={1}
             sx={{width:"95%", alignItems: 'center', justifyContent:'center', margin: "1%"}}
             />
             <Divider variant="middle" />
