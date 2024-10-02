@@ -3,9 +3,8 @@ import Tray from './Tray.js';
 import React, {useState, useEffect} from 'react';
 import {BASEMAP} from '@deck.gl/carto';
 import './app.css'
-
-import DeckGL from '@deck.gl/react';
-import {StaticMap} from 'react-map-gl';
+import Map, {useControl} from 'react-map-gl/maplibre';
+import {MapboxOverlay as DeckOverlay} from '@deck.gl/mapbox';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -36,6 +35,7 @@ import Draggable from 'react-draggable';
 import {create_gen_layer2,create_vre_layer2, create_trx_arc_layer2, create_styling_object} from '../lib/layer_generators.js';
 import {loadScenarioGeo, fetchScenarioTimeStep,fetchDateRange, getScenarioMetadata} from '../lib/loaders.js'
 import * as transformations from '../lib/transformations.js';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 const drawerWidth = 240;
 
@@ -60,7 +60,11 @@ const drawerWidth = 240;
 // Enable start and end date functionality for clock
 // Labels for each slider.
 // Start and End Date should update the start_index, index, and end_index
-
+function DeckGLOverlay(props) {
+  const overlay = useControl(() => new DeckOverlay(props));
+  overlay.setProps(props);
+  return null;
+}
 
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -99,6 +103,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
         props: ({ open }) => open,
         style: {
           width: `calc(100% - ${drawerWidth}px)`,
+
           marginLeft: `${drawerWidth}px`,
           transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.easeOut,
@@ -290,12 +295,6 @@ export function App() {
 
 
 
-    const [viewState, setViewState] = useState({
-        latitude: 39.0,
-        longitude: -104.0,
-        zoom: 4,
-      });
-
 
     const [listItemOpen, updateListItemOpen] = useState({scenarios:false, layers:false, basemap:false, animation:false});
 
@@ -329,10 +328,58 @@ export function App() {
       updateClockPosition({x: event.layerX, y: event.layerY});
     };
 
+    // Map Size settings
+    const [viewState, setViewState] = useState({
+      latitude: 39.0,
+      longitude: -104.0,
+      zoom: 5,
+      width: 1920,
+      height: 1080
+    });
+
+
+    const adjustViewportforHiDPI = () => {
+
+
+      if (typeof window !== 'undefined'){
+        const pixelRatio = window.devicePixelRatio || 1;
+        const newWidth = window.innerWidth;
+        const newHeight = window.innerHeight;
+        console.log("screen resize detected");
+        console.log([newWidth, newHeight]);
+        setViewState({...viewState, width: newWidth, height: newHeight})
+      }
+    }
+
+    useEffect(()=>{
+
+      adjustViewportforHiDPI();
+      if (typeof window !== 'undefined'){
+        window.addEventListener('resize', adjustViewportforHiDPI);
+
+        return () => window.removeEventListener('resize', adjustViewportforHiDPI);
+      }
+
+
+    },[])
+
+
     return (
+
         <Box sx={{ display: 'flex' }}>
+          <link href='https://unpkg.com/maplibre-gl@v1.22.19/dist/maplibre-gl.css' rel='stylesheet' />
+        <Map
+              initialViewState={{
+                latitude: viewState.latitude,
+                longitude: viewState.longitude,
+                zoom: viewState.zoom
+              }}
+          style={{width: viewState.width, height: viewState.height}}
+          mapStyle={BaseLayer}
+          >
+
         <CssBaseline />
-          <AppBar position="fixed" open={open}>
+          <AppBar id='appbar' position="fixed" open={open}>
             <Toolbar>
               <IconButton
                 color="inherit"
@@ -397,17 +444,9 @@ export function App() {
           </Drawer>
           <Main open={open}>
             <DrawerHeader />
-            <DeckGL
-            controller={deckControl}
-            useDevicePixels={true}
-            initialViewState={viewState}
-            layers={layers}
-            viewState={viewState}
-            onViewStateChange={evt => setViewState(evt.viewState)}
 
+          <DeckGLOverlay layers={layers}  interleaved />
 
-            >
-            <StaticMap id='mapbox' mapStyle={BaseLayer} reuseMaps={true}/>
             {
                 open &&
             <Box sx={{maxWidth: drawerWidth*3.5,maxHeight:'85%', position:'absolute', left: drawerWidth*1.05, top: drawerWidth*0.5, color: '#000000', bgcolor: '#e2e2e2' }}>
@@ -435,9 +474,9 @@ export function App() {
             </Box>
             </Draggable>
             }
-            </DeckGL>
-        </Main>
 
+        </Main>
+        </Map>
         </Box>
       );
 

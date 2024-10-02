@@ -12,3 +12,12 @@
 .row{
     display: grid
 }
+
+
+#appbar {
+    background-color: #ffffff00;
+}
+
+#appbar:hover {
+    background-color: #82a5f352;
+}
