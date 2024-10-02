@@ -368,6 +368,7 @@ export function App() {
 
         <Box sx={{ display: 'flex' }}>
           <link href='https://unpkg.com/maplibre-gl@v1.22.19/dist/maplibre-gl.css' rel='stylesheet' />
+          <CssBaseline />
         <Map
               initialViewState={{
                 latitude: viewState.latitude,
@@ -378,7 +379,7 @@ export function App() {
           mapStyle={BaseLayer}
           >
 
-        <CssBaseline />
+
           <AppBar id='appbar' position="fixed" open={open}>
             <Toolbar>
               <IconButton
@@ -445,7 +446,7 @@ export function App() {
           <Main open={open}>
             <DrawerHeader />
 
-          <DeckGLOverlay layers={layers}  interleaved />
+          <DeckGLOverlay layers={layers}  /*interleaved*//>
 
             {
                 open &&
@@ -465,7 +466,11 @@ export function App() {
             </Box>
             }
 
-            {clockState.showClock &&
+
+
+        </Main>
+        <Box>
+        {clockState.showClock &&
             <Draggable defaultPosition={clockPosition}  onStart={()=>setDeckControl(false)} onStop={handleDragStop}>
             <Box sx={{width:'17%', color: '#d44811', bgcolor: '#00000000' }}>
               <h1>
@@ -474,8 +479,7 @@ export function App() {
             </Box>
             </Draggable>
             }
-
-        </Main>
+        </Box>
         </Map>
         </Box>
       );
