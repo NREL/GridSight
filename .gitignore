@@ -94,3 +94,12 @@ out/
 
 # data
 src/layers/*
+server/data
+*.pq.gz
+
+# PYTHON
+.venv
+assets/*
+*.pyc
+old/*
+data

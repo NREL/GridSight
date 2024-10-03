@@ -1,0 +1,23 @@
+#sc1 {
+    width: 50%;
+    height: 50%;
+    float: left;
+}
+#sc2 {
+    width: 50%;
+    height: 50%;
+    float: right;
+}
+
+.row{
+    display: grid
+}
+
+
+#appbar {
+    background-color: #ffffff00;
+}
+
+#appbar:hover {
+    background-color: #82a5f352;
+}
