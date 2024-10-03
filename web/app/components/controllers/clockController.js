@@ -71,6 +71,7 @@ export default function ClockController({props, onChange}){
             <Stack direction="row" spacing={2}>
             <DateTimePicker
             label="Start Date"
+            disabled
             value={selectedDateRange.start}
             minDateTime ={dayjs(props.startDate)}
             maxDateTime={dayjs(props.endDate)}
@@ -78,6 +79,7 @@ export default function ClockController({props, onChange}){
             />
             <DateTimePicker
             label="End Date"
+            disabled
             value={selectedDateRange.end}
             minDateTime ={dayjs(props.startDate)}
             maxDateTime={dayjs(props.endDate)}

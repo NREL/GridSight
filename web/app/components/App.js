@@ -446,7 +446,7 @@ export function App() {
           <Main open={open}>
             <DrawerHeader />
 
-          <DeckGLOverlay layers={layers}  /*interleaved*//>
+          <DeckGLOverlay layers={layers}  interleaved />
 
             {
                 open &&
@@ -473,7 +473,7 @@ export function App() {
         {clockState.showClock &&
             <Draggable defaultPosition={clockPosition}  onStart={()=>setDeckControl(false)} onStop={handleDragStop}>
             <Box sx={{width:'17%', color: '#d44811', bgcolor: '#00000000' }}>
-              <h1>
+              <h1 id ='Clock'>
                 {currentTime}
               </h1>
             </Box>
