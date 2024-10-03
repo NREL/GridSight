@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import os
 from lib.data_lake import S3Handler
 from urllib.parse import unquote
+from uuid import uuid4
 
 s3handler = S3Handler(
     os.environ['ACCESS_KEY'],
@@ -40,6 +41,16 @@ def make_response(data, status=200, extra_headers={}):
     }
     return resp
 
+@registry.handles(
+        rule='/api/<string:project>/<string:scenario>/<string:name>',
+        method='PUT',
+        authenticators=authenticator
+)
+def putParquet(project, scenario, name):
+
+    new_id = str(uuid4())
+
+
 
 @registry.handles(
     rule='/api/timestep/<string:project>/<string:scenario>/<int:index>',
@@ -53,6 +64,16 @@ def getScenarioTimestep(project, scenario, index):
     flow_df = s3handler.get_dataframe(project, scenario, 'flow.parquet')
 
     return json.dumps({'generation':gen_df.row(index, named=True), 'flow':flow_df.row(index, named=True), 'curt':curt_df.row(index, named=True)}, default=str)
+
+@registry.handles(
+    rule='/api/timestep/<string:project>/<string:scenario>',
+    method='GET',
+    authenticators=authenticator
+)
+def getScenarioDateRange(project, scenario):
+
+    dates = s3handler.get_scenario_timestamps(project, scenario, 'generators.parquet')
+    return json.dumps({'DateTime':dates}, default=str)
 
 
 @registry.handles(

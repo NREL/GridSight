@@ -22,9 +22,9 @@ export const MW_CONV = {
 }
 
 export const GEN_MAP = {
-    'Nuclear':[130, 0, 0],
-    'Coal':[34, 34, 34],
-    'Gas':[194, 161, 219],
+    'Nuclear':[50,50,200], //[130, 0, 0],
+    'Coal':[200,50,50], //[34, 34, 34], R
+    'Gas': [50,200,50], //[194, 161, 219], G
     'NG':[194, 161, 219],
     'Gas-CT':[194, 161, 219],
     'NG-CT':[194, 161, 219],
@@ -49,8 +49,9 @@ export const GEN_MAP = {
     "Wind&PV":[80, 200, 120],
     "Wind/PV":[80, 200, 120],
     "Wind/Solar":[80, 200, 120],
-    "PV":[255, 201, 3],
+    "PV": [255, 201, 3],
     "Solar PV": [255, 201, 3],
+    "Solar":[255, 201,3],
     "dPV":[255, 171, 2],
     'Rooftop PV':[255, 171, 2],
     "VRE":[127, 195, 64],
@@ -78,14 +79,21 @@ export const COLOR_MAP = {
 
 export function createFlags(geojson, property){
     console.log("processing flags")
-    var flags = {};
-    var features = geojson['features'];
-    for(var index in features){
+    var flags = new Set();
 
-        var flag = features[index].properties[property]
-        flags[flag] = true
+    if (geojson){
+        var features = geojson['features'];
+        for(var index in features){
+
+            var flag = features[index].properties[property]
+            flags.add(flag);
+        }
+
+
+
     }
-    return flags;
+    return [...flags];
+
 
 }
 
@@ -175,31 +183,25 @@ export function setGeneratorColor(gen_type){
     return GEN_MAP[gen_type]
 }
 
-export function setGeneratorRadius(gen_mw, curt_mw, selected_gen){
+export function setGeneratorRadius(gen_mw, curt_mw){
 
-    if (selected_gen){
-        var tot_mw = gen_mw + curt_mw;
-        var outer_radius = Math.sqrt(tot_mw/Math.PI) //r2
-        return outer_radius
-    }
-    else {
-        return 0.0
-    }
+
+    var tot_mw = gen_mw + curt_mw;
+    var outer_radius = Math.sqrt(tot_mw/Math.PI) //r2
+    return outer_radius
 
   }
 
-export function setGeneratorLineWidth(gen_mw, curt_mw, selected_gen) {
+export function setGeneratorLineWidth(gen_mw, curt_mw) {
 
-    if(selected_gen){
+
         var tot_mw = gen_mw + curt_mw;
         var outer_radius = Math.sqrt(tot_mw/Math.PI) //r2
         var inner_radius = Math.sqrt(gen_mw/Math.PI)
         var radius_diff = outer_radius - inner_radius
         return radius_diff;
-    }
-    else {
-        return 0.0
-    }
+
+
   };
 
 

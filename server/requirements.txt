@@ -7,3 +7,9 @@ pyarrow
 uwsgi
 python-dotenv
 s3fs
+#fastapi[standard]
+#starlette
+#uvicorn
+#geopandas
+#pytest
+#requests
