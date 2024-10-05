@@ -103,3 +103,5 @@ assets/*
 *.pyc
 old/*
 data
+.pytest_cache
+*.egg-info
