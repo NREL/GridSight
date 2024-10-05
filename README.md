@@ -35,6 +35,9 @@ Install the gridsight client into your virtual environment.
 
 To upload the demonstration data run `python upload_test_data.py`
 
+After uploading data, log in and adjust the layer styles to scale up the generation and
+transmission radius/width.
+
 ## Roadmap
 
 1. Generalization of animated layers to allow any type of geometry+timeseries
