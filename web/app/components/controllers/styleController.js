@@ -311,10 +311,6 @@ export function FilterController({props, onChange}){
                 </FormControl>
 
             </Stack>
-            <Divider/>
-            <Box>
-                {JSON.stringify(props)}
-            </Box>
         </Box>
     )
 }
