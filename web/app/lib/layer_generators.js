@@ -1,7 +1,6 @@
 import {GeoJsonLayer, ArcLayer} from '@deck.gl/layers';
 import {DataFilterExtension} from '@deck.gl/extensions';
 //import { SelectionLayer } from '@nebula.gl/layers';
-
 import * as transformations from '../lib/transformations';
 
 
@@ -24,9 +23,9 @@ function logGenId(object){
 }
 
 function onClickProps(object){
-  var msg = JSON.stringify(object.properties);
-  alert(msg)
-  console.log(msg)
+  //var msg = JSON.stringify(object);
+  //alert(msg)
+  console.log(object)
 }
 
 function logGenClick(object, DATA){
@@ -141,7 +140,7 @@ export function create_vre_layer2(GEO, DATA,  styling, frameRate){
       //onClick: info => logGenClick(info.object, DATA),
 
       getFilterCategory: f=> f.properties.TECH,
-      filterCategories: styling.filters.filterCategories,
+      filterCategories: ["0.5987066662474485",...styling.filters.filterCategories],
       filterEnabled: styling.filters.enabled,
       extensions: [new DataFilterExtension({categorySize: 1})],
 
@@ -194,7 +193,7 @@ export function create_gen_layer2(GEO, DATA, styling, frameRate){
       onClick: info => onClickProps(info.object),
 
       getFilterCategory: f=> f.properties.TECH,
-      filterCategories: styling.filters.filterCategories,
+      filterCategories: ["0.5987066662474485", ...styling.filters.filterCategories],
       filterEnabled: styling.filters.enabled,
       extensions: [new DataFilterExtension({categorySize: 1})],
 
@@ -227,7 +226,7 @@ export function create_gen_layer2(GEO, DATA, styling, frameRate){
 
 
 
-export function create_trx_arc_layer2(GEO, DATA, styling, frameRate ){
+export function create_trx_arc_layer2(GEO, DATA, styling, frameRate, onLayerClick ){
 
   if (GEO){
 
@@ -255,12 +254,12 @@ export function create_trx_arc_layer2(GEO, DATA, styling, frameRate ){
 
       pickable: styling.additional.pickable,
       autoHighlight: styling.additional.autoHighlight,
-      lineCapRounded: true,
+      lineCapRounded: false,
 
-      onClick: info => onClickProps(info.object),
+      onClick: info => onClickProps(info),
 
       getFilterCategory: d => d.properties.TO_VN,
-      filterCategories: styling.filters.filterCategories,
+      filterCategories: [0.5987066662474485, ...styling.filters.filterCategories],
       filterEnabled: styling.filters.enabled,
       extensions: [new DataFilterExtension({categorySize: 1})],
       updateTriggers: {
