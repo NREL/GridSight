@@ -3,11 +3,13 @@ import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import ThemeProvider from '@mui/system/ThemeProvider';
+
+import Paper from "@mui/material/Paper";
+import {useTheme} from "@mui/material/styles"
 function makeLabels(list){
   var i = 1;
   var options = []
@@ -45,6 +47,7 @@ async function listScenarios(project){
 //TODO pass in USER info for scenario picker.
 export default function ScenarioPicker({scenarioProp, onChange}){
 
+  const theme = useTheme();
   const [allProjects, updateAllProjects] = useState([{id:1, name:"Pick A Project"}]);
   const [allScenarios, updateAllScenarios] = useState([{id:1, name:"Pick A Scenario"}]);
 
@@ -75,8 +78,12 @@ export default function ScenarioPicker({scenarioProp, onChange}){
     onChange({...scenarioProp, scenario: event.target.value});
   }
   return (
-    <Box sx={{minWidth: 500, width:'100%', margin:'2%', padding: '2%'}}>
-      <h2>Projects and Scenarios</h2>
+    <Paper sx={{minWidth: 500, width:'100%', borderRadius:2}}>
+     <Box sx={{mb:2}}>
+      <Typography align='center' variant='h4' bgcolor="primary.main" color="primary.contrastText" borderRadius={2}>
+        Projects and Scenarios
+      </Typography>
+      </Box> 
     <Stack direction="row" spacing={3} divider={<Divider orientation="vertical" flexItem />}>
     <Box sx={{ width: '40%' }}>
       <FormControl fullWidth  >
@@ -118,7 +125,7 @@ export default function ScenarioPicker({scenarioProp, onChange}){
         </FormControl>
       </Box>
       </Stack>
-    </Box>
+    </Paper>
 
   );
 

@@ -2,7 +2,7 @@ flask
 flask-rebar
 polars
 fsspec
-pandas>=2.0
+pandas
 pyarrow
 uwsgi
 python-dotenv

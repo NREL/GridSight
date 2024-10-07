@@ -1,6 +1,8 @@
 'use client';
 
-import React, {useState, useEffect, use} from 'react';
+import React, {useState, useEffect} from 'react';
+import { useTheme } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -25,6 +27,9 @@ export default function ClockController({props, onChange}){
     // Synce between min/max slider vals, and min/max date range
     // Value hover should be datetime.
 
+    const theme = useTheme();
+
+    
     function valuetext(value) {
         return `${value} Index`;
     }
@@ -60,15 +65,16 @@ export default function ClockController({props, onChange}){
         onChange({...props, showClock: event.target.checked})
     };
     return (
-    <Box sx={{minWidth: 600, alignItems: 'center', margin:"1%"}}>
-        <Stack direction="column" spacing={2} sx={{width:"95%",  margin: "1%"}}>
-            <Box>
-                <Typography variant='h4' align='center'>
+    
+    <Paper sx={{minWidth: 600, alignItems: 'center', margin:"1%", borderRadius:2}}>
+        
+        <Typography variant='h4' align='center' bgcolor="primary.main" color="primary.contrastText" borderRadius={2}>
                 Animation
-                </Typography>
-            </Box>
+        </Typography>
+        
+        <Stack direction="column" spacing={2} alignContent='center' sx={{width:"100%",  margin: "2%"}}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" alignItems='center' justifyContent="center" spacing={2}>
             <DateTimePicker
             label="Start Date"
             disabled
@@ -101,7 +107,7 @@ export default function ClockController({props, onChange}){
             />
             <Divider variant="middle" />
             <Box>
-                <Typography variant='h5' align='center'>
+                <Typography variant='h6' align='center'>
                 Playback
                 </Typography>
             </Box>
@@ -147,6 +153,6 @@ export default function ClockController({props, onChange}){
 
             </Stack>
         </Stack>
-    </Box>
+    </Paper>
     )
 }
