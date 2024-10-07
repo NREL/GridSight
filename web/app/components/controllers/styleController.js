@@ -1,4 +1,4 @@
-import React, {useState, useEffect, SyntheticEvent, ChangeEvent} from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Slider from '@mui/material/Slider';
@@ -13,11 +13,13 @@ import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
-
+import { useTheme } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
 
 export function CommonStyleController({type, props, onChange}){
 
 
+    const theme = useTheme();
     var name = 'Radius';
     if (type === 'Line'){
         name = 'Line';
@@ -61,9 +63,9 @@ export function CommonStyleController({type, props, onChange}){
     }
 
     return (
-        <Box >
+        <Box sx={{maxHeight:400, overflow:'hidden', overflowY:"scroll"}}>
             <Stack direction="column" spacing={1}>
-            <Typography variant='h5' align='center'>
+            <Typography variant='h5' align='center' bgcolor="primary.main" color="primary.contrastText">
                 {type} Sizing
             </Typography>
                 {false &&
@@ -151,7 +153,7 @@ export function AdditionalStyleController({props, onChange}){
 
     return (
         <Box>
-            <Typography variant='h5' align='center'>
+            <Typography variant='h5' align='center' bgcolor="primary.main" color="primary.contrastText">
                 Additional Styling
             </Typography>
             <Stack direction="row">
@@ -220,16 +222,16 @@ export function StyleController({props, onChange}){
 
     // ERROR radio group is not "controlled" because of undefined inputs.
     return (
-        <Box >
+        <Paper sx={{maxHeight: 500, overflowY:"auto"}} >
             <Stack direction="column" spacing={1}>
-            <Divider/>
+            
             <CommonStyleController type={'Point'} props={props.pointStyles} onChange={onPointStyleChange}/>
-            <Divider/>
+            
             <CommonStyleController type= {'Line'} props={props.lineStyles} onChange={onLineStyleChange}/>
-            <Divider/>
+            
             <AdditionalStyleController props={props.additional} onChange={onAdditionalChange}/>
             </Stack>
-        </Box>
+        </Paper>
     )
 }
 

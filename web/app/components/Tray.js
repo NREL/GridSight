@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import BaseLayerController from "./controllers/BaseLayerControl";
 import ClockController from "./controllers/clockController";
 import ScenarioPicker from "./controllers/Scenarios";
 import LayerFactory from "./controllers/Layers";
@@ -8,6 +7,7 @@ import Box from '@mui/material/Box';
 const trayWidth = 500;
 
 export default function Tray({trayFlags, userState, baseLayerProp, onBaseLayerChange, scenarioProp, onScenarioChange, layerProps, onLayerPropChange, clockState, onClockChange}){
+
 
     function onBaseSelect(val){
 
@@ -24,9 +24,9 @@ export default function Tray({trayFlags, userState, baseLayerProp, onBaseLayerCh
 
     return (
 
-        <Box sw={{ height:'auto', maxHeight:'85%', boxShadow: 3  }}>
+        <Box sw={{ height:'auto', maxHeight:'95%', boxShadow: 3 }}>
 
-                <Box sw={{width: "100%", boxShadow: 3,  color: '#000000'}}>
+                <Box sw={{width: "100%", boxShadow: 3}}>
                     {trayFlags.scenarios &&
 
                         <ScenarioPicker
@@ -36,23 +36,14 @@ export default function Tray({trayFlags, userState, baseLayerProp, onBaseLayerCh
                     }
                 </Box>
 
-                <Box sw={{width: "100%" , boxShadow: 3, color: '#000000' }}>
-                    {trayFlags.basemap &&
-                    <BaseLayerController
-                    baseLayerProp={baseLayerProp}
-                    onLayerSelect={(val)=>onBaseSelect(val)}
-                    />
-                    }
-                </Box>
-
-                <Box sw={{width: "100%" , boxShadow: 3, color: '#000000'}}>
+                <Box sw={{width: "100%" , boxShadow: 3}}>
                     {trayFlags.layers &&
 
-                        <LayerFactory AllLayersProps={layerProps} updateAllLayerProps={onLayerPropChange}/>
+                        <LayerFactory baseLayerProp={baseLayerProp} updateBaseSelect={(val)=>onBaseSelect(val)} deckLayersProps={layerProps} updateDeckLayerProps={onLayerPropChange}/>
 
                     }
                 </Box>
-                <Box sw={{width: "100%" , boxShadow: 3, color: '#000000' }}>
+                <Box sw={{width: "100%" , boxShadow: 3}}>
                     {trayFlags.animation &&
 
                             <ClockController props={clockState} onChange={onClockChange}/>

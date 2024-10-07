@@ -5,14 +5,13 @@ import {BASEMAP} from '@deck.gl/carto';
 import './app.css'
 import Map, {useControl} from 'react-map-gl/maplibre';
 import {MapboxOverlay as DeckOverlay} from '@deck.gl/mapbox';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -28,8 +27,6 @@ import MapIcon from '@mui/icons-material/Map';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
-import { positions } from '@mui/system';
-import ClockView from './views/ClockView.js'
 import Draggable from 'react-draggable';
 
 import {create_gen_layer2,create_vre_layer2, create_trx_arc_layer2, create_styling_object} from '../lib/layer_generators.js';
@@ -39,18 +36,19 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 
 const drawerWidth = 240;
 
+const nrelTheme = createTheme({
+  palette:{
+    primary: {
+      main: "#0088CE",
+      contrastText: "#FFFFFF"
+    }
 
-//TODOs
-// Upgrade Static Map (use mapbox token and see if it works)
-// Take not of static map version in case to revert.
-// General theme for Various trays
-// Rounded edges for outer book
-// header banner with different color.
+  }
+});
 
 
 ///// Layer Style Controls ////
 // Don't show point styles for Transmission layer
-// Filters for layers
 // Numeric filter for utilization.
 // If enabled use utilization array and soft range
 
@@ -60,6 +58,7 @@ const drawerWidth = 240;
 // Enable start and end date functionality for clock
 // Labels for each slider.
 // Start and End Date should update the start_index, index, and end_index
+
 function DeckGLOverlay(props) {
   const overlay = useControl(() => new DeckOverlay(props));
   overlay.setProps(props);
@@ -308,9 +307,6 @@ export function App() {
             newListItemOpen.layers = !newListItemOpen.layers;
         }
         else if (index == 2){
-            newListItemOpen.basemap = !newListItemOpen.basemap;
-        }
-        else if (index == 3){
             newListItemOpen.animation = !newListItemOpen.animation;
         }
         console.log(newListItemOpen);
@@ -418,7 +414,7 @@ export function App() {
             </DrawerHeader>
             <Divider />
             <List>
-              {['Scenarios', 'Layers', 'Basemaps', 'Animation'].map((text, index) => (
+              {['Scenarios', 'Layers', 'Animation'].map((text, index) => (
                 <ListItem key={text} disablePadding>
                   <ListItemButton key={index} onClick={(event)=>handleListItemClick(index, event)}>
                     <ListItemIcon>
@@ -450,7 +446,8 @@ export function App() {
 
             {
                 open &&
-            <Box sx={{maxWidth: drawerWidth*3.5,maxHeight:'85%', position:'absolute', left: drawerWidth*1.05, top: drawerWidth*0.5, color: '#000000', bgcolor: '#e2e2e2' }}>
+            <ThemeProvider theme={nrelTheme}>
+            <Box sx={{maxWidth: drawerWidth*3.5,maxHeight:'95%', position:'absolute', left: drawerWidth*1.05, top: drawerWidth*0.35 }}>
             <Tray
                 trayFlags={listItemOpen}
                 userState={'test'}
@@ -464,6 +461,7 @@ export function App() {
                 onClockChange={updateClockState}
             />
             </Box>
+            </ThemeProvider>
             }
 
 

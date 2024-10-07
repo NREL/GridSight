@@ -1,12 +1,12 @@
-import React, {useState, useEffect, SyntheticEvent} from 'react';
+import React, {useState, useEffect} from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import PaletteIcon from '@mui/icons-material/Palette';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import BuildIcon from '@mui/icons-material/Build';
 import {StyleController, FilterController} from './styleController'
+import Box from '@mui/material/Box';
+
 
 export default function LayerStyler({layerProp, onLayerPropChange}){
     const [value, setValue] = useState(0);
@@ -40,21 +40,21 @@ export default function LayerStyler({layerProp, onLayerPropChange}){
     }, [value])
 
     return (
-        <div>
+        <Box>
         <Tabs value={value} onChange={handleChange} aria-label="Styling Tabs">
             <Tab icon={<PaletteIcon/>} aria-label="Styling"/>
             <Tab icon={<FilterAltIcon/>} aria-label="Filters"/>
             <Tab icon={<BuildIcon/>} aria-label="Advanced" disabled/>
         </Tabs>
-        <div>
+        <Box sx={{m:1}}>
             {showStyles &&
             <StyleController props={layerProp} onChange={onLayerPropChange}/>
             }
             {showFilters &&
             <FilterController props={layerProp.filters} onChange={(val)=>onFilterChange(val)}/>
             }
-        </div>
-        </div>
+        </Box>
+        </Box>
     )
 
 }

@@ -10,15 +10,26 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-//import Divider from '@mui/material/Divider';
-//import { ThemeProvider } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import {BASEMAP} from '@deck.gl/carto';
+import Divider from '@mui/material/Divider';
 
+export default function LayerFactory({baseLayerProp, updateBaseSelect, deckLayersProps, updateDeckLayerProps}){
 
-export default function LayerFactory({AllLayersProps, updateAllLayerProps}){
+    const handleBaseChange = (event) => {
+        console.log("base layer changed detected");
+        console.log(event.target.value);
+        //updateSelectedTile(event.target.value);
+        updateBaseSelect(event.target.value);
+    };
 
 
     function handleVisibilityClick(index){
-        const newAllLayersProps = AllLayersProps.map((layer, i)=> {
+        const newAllLayersProps = deckLayersProps.map((layer, i)=> {
             if (i === index){
                 // toggle visibility bool
                 layer.visible = !layer.visible
@@ -30,13 +41,13 @@ export default function LayerFactory({AllLayersProps, updateAllLayerProps}){
         })
         console.log("visibility toggled");
         console.log(index);
-        updateAllLayerProps(newAllLayersProps);
+        updateDeckLayerProps(newAllLayersProps);
 
     }
 
 
     function handleSingleLayerChange(index, newLayerProps){
-        const newAllLayersProps = AllLayersProps.map((layer, i)=>{
+        const newAllLayersProps = deckLayersProps.map((layer, i)=>{
             if (i == index){
                 return newLayerProps;
             }
@@ -45,20 +56,46 @@ export default function LayerFactory({AllLayersProps, updateAllLayerProps}){
             }
         })
 
-        updateAllLayerProps(newAllLayersProps);
+        updateDeckLayerProps(newAllLayersProps);
     }
 
     // Passes the prop into each indivual layer object
     return (
 
-        <Box sx={{width: 800, maxHeight:1200, overflow: 'hidden', overflowY: "scroll", borderRadius: 2}}>
-            <Typography variant='h3' align='center'>
+        <Paper elevation={1} sx={{width: 600, maxHeight:800, overflowY: "auto", borderRadius: 2}}>
+            <Typography variant='h4' align='center' bgcolor="primary.main" color="primary.contrastText" borderRadius={2}>
                 Layer Styles
             </Typography>
+            <Box sx={{ minWidth: 550, m: 1}}>
+            <FormControl sx={{m:1}}> 
+            <InputLabel id="tile-layer-label">
+                <Typography variant = 'h5'>
+                Base Map
+                </Typography>
+            </InputLabel>
+                <Select
+                labelId="tile-layer-label"
+                id="tile-layer-label"
+                value={baseLayerProp}
+                label="Base Layer"
+                onChange={handleBaseChange}
+            >
+            <MenuItem value={BASEMAP.DARK_MATTER}>DARK_MATTER</MenuItem>
+            <MenuItem value={BASEMAP.DARK_MATTER_NOLABELS}>DARK_MATTER_NOLABELS</MenuItem>
+            <MenuItem value={BASEMAP.POSITRON}>POSITRON</MenuItem>
+            <MenuItem value={BASEMAP.POSITRON_NOLABELS}>POSITRON_NOLABELS</MenuItem>
+            <MenuItem value={BASEMAP.VOYAGER}>VOYAGER</MenuItem>
+            <MenuItem value={BASEMAP.VOYAGER_NOLABELS}>VOYAGER_NOLABELS</MenuItem>
+
+            </Select>
+            </FormControl>
+            </Box>
+            <Divider/>
             {
-            AllLayersProps.map((layer, index)=>(
-                <Stack spacing={2} direction="row" sx={{alignItems: 'center', ml:1, mb:1, width: '98%', maxHeight:'85%' }}>
-                <Accordion sx={{width:'85%'}}>
+            deckLayersProps.map((layer, index)=>(
+                <Box>
+                <Stack spacing={1} direction="row" sx={{alignItems: 'center', ml:1, mb:1, width: '99%', maxHeight:'95%' }}>
+                <Accordion sx={{width:'98%',  overflow: 'hidden', overflowY: "scroll"}}>
 
                     <AccordionSummary
                     expandIcon={<ArrowDropDownIcon/>}>
@@ -67,14 +104,14 @@ export default function LayerFactory({AllLayersProps, updateAllLayerProps}){
                         </Typography>
 
                     </AccordionSummary>
-                    <AccordionDetails >
-                        <Box sx={{ maxHeight:'80%'}}>
+                    <AccordionDetails>
+                        <Box>
                             <LayerStyler layerProp={layer} onLayerPropChange={(newProps)=>handleSingleLayerChange(index, newProps)}/>
                         </Box>
 
                     </AccordionDetails>
                 </Accordion>
-                <Button variant='text' size='medium' onClick={()=>{handleVisibilityClick(index)}}>
+                <Button variant='text' size='medium' onClick={()=>{handleVisibilityClick(index)}} sx={{alignItems:'flex-start', justifyContent:'flex-start'}}>
                         {layer.visible &&
                         <VisibilityIcon/>
                         }
@@ -82,9 +119,10 @@ export default function LayerFactory({AllLayersProps, updateAllLayerProps}){
                         <VisibilityOffIcon/>}
                     </Button>
                 </Stack>
+            </Box>
             ))
         }
-        </Box>
+        </Paper>
 
     )
 
