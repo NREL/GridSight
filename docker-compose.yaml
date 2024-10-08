@@ -35,7 +35,7 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
-    command: server /data --console-address ":9001" && 
+    command: server /data --console-address ":9001" &&
     volumes:
       - minio-data:/data
     environment:
@@ -46,7 +46,11 @@ services:
     image: minio/mc
     depends_on:
       - minio
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin;
