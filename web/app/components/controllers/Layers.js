@@ -67,7 +67,7 @@ export default function LayerFactory({baseLayerProp, updateBaseSelect, deckLayer
                 Layer Styles
             </Typography>
             <Box sx={{ minWidth: 550, m: 1}}>
-            <FormControl sx={{m:1}}> 
+            <FormControl sx={{m:1}}>
             <InputLabel id="tile-layer-label">
                 <Typography variant = 'h5'>
                 Base Map
@@ -95,7 +95,7 @@ export default function LayerFactory({baseLayerProp, updateBaseSelect, deckLayer
             deckLayersProps.map((layer, index)=>(
                 <Box>
                 <Stack spacing={1} direction="row" sx={{alignItems: 'center', ml:1, mb:1, width: '99%', maxHeight:'95%' }}>
-                <Accordion sx={{width:'98%',  overflow: 'hidden', overflowY: "scroll"}}>
+                <Accordion sx={{width:'98%'}}>
 
                     <AccordionSummary
                     expandIcon={<ArrowDropDownIcon/>}>

@@ -63,7 +63,7 @@ export function CommonStyleController({type, props, onChange}){
     }
 
     return (
-        <Box sx={{maxHeight:400, overflow:'hidden', overflowY:"scroll"}}>
+        <Box sx={{maxHeight:400}}>
             <Stack direction="column" spacing={1}>
             <Typography variant='h5' align='center' bgcolor="primary.main" color="primary.contrastText">
                 {type} Sizing
@@ -222,13 +222,13 @@ export function StyleController({props, onChange}){
 
     // ERROR radio group is not "controlled" because of undefined inputs.
     return (
-        <Paper sx={{maxHeight: 500, overflowY:"auto"}} >
+        <Paper>
             <Stack direction="column" spacing={1}>
-            
+
             <CommonStyleController type={'Point'} props={props.pointStyles} onChange={onPointStyleChange}/>
-            
+
             <CommonStyleController type= {'Line'} props={props.lineStyles} onChange={onLineStyleChange}/>
-            
+
             <AdditionalStyleController props={props.additional} onChange={onAdditionalChange}/>
             </Stack>
         </Paper>
