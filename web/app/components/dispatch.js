@@ -33,7 +33,6 @@ ChartJS.register(
 
 
 import { GEN_MAP, MW_CONV } from '../lib/transformations';
-import Multiselect from 'multiselect-react-dropdown';
 
 
 async function getDispatch(project, scenario, index){
@@ -260,7 +259,7 @@ function get_multiselect_options(entities){
 }
 
 
-export function Dispatch({index, project, scenario, freq, visible}){
+export default function Dispatch({index, project, scenario, freq, visible}){
 
     const [dispatchData, updateDispatchData] = useState();
 
@@ -360,15 +359,7 @@ export function Dispatch({index, project, scenario, freq, visible}){
                     ISO Filters
                 </button>
                     { showConfig &&
-                    <Multiselect
-                    id='DispatchMultiSelect'
-                    class="MultiSelect"
-                    options={get_multiselect_options(dispatchMeta.entities)} // Options to display in the dropdown
-                    selectedValues={selectedRegions} // Preselected value to persist in dropdown
-                    onSelect={(val) => updateSelected(val)} // Function will trigger on select event
-                    onRemove={(val) => updateSelected(val)} // Function will trigger on remove event
-                    displayValue="name" // Property name to display in the dropdown options
-                    />
+                        <div>TODO</div>
                     }
 
                 <div id='dispatchChart2'>

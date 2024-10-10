@@ -28,11 +28,12 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import Draggable from 'react-draggable';
-
 import {create_gen_layer2,create_vre_layer2, create_trx_arc_layer2, create_styling_object} from '../lib/layer_generators.js';
 import {loadScenarioGeo, fetchScenarioTimeStep,fetchDateRange, getScenarioMetadata} from '../lib/loaders.js'
 import * as transformations from '../lib/transformations.js';
 import 'maplibre-gl/dist/maplibre-gl.css';
+
+import Dispatch from './dispatch.js';
 
 const drawerWidth = 240;
 
@@ -468,6 +469,7 @@ export function App() {
 
         </Main>
         <Box>
+        <Box>
         {clockState.showClock &&
             <Draggable defaultPosition={clockPosition}  onStart={()=>setDeckControl(false)} onStop={handleDragStop}>
             <Box sx={{width:'17%', color: '#d44811', bgcolor: '#00000000' }}>
@@ -476,6 +478,14 @@ export function App() {
               </h1>
             </Box>
             </Draggable>
+            }
+        </Box>
+            {
+              true && 
+              <Dispatch project={scenarioState.project} scenario={scenarioState.scenario}
+                freq={clockState.frequency} index={clockState.index} visible={true}
+              
+              />
             }
         </Box>
         </Map>
