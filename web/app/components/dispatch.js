@@ -31,19 +31,22 @@ ChartJS.register(
     Filler
 )
 
-
+//import { BarChart } from '@mui/x-charts/BarChart';
 import { GEN_MAP, MW_CONV } from '../lib/transformations';
-
+import './dispatch.css';
 
 async function getDispatch(project, scenario, index){
 
 
-    const p = project[0].name
-    const s = scenario[0].name
+    const p = project
+    const s = scenario
 
     const response = await fetch(`/api/dispatch/${p}/${s}/${index}`)
 
     const data = await response.json();
+    const parsed = JSON.parse(data);
+    console.log("chart data");
+    console.log(parsed);
     return JSON.parse(data)
 
 }
@@ -54,13 +57,15 @@ async function getDispatchMeta(project, scenario){
 
 
     try{
-        const p = project[0].name
-        const s = scenario[0].name
+        const p = project
+        const s = scenario
 
         const response = await fetch(`/api/dispatch/${p}/${s}/meta`)
 
         const data = await response.json();
 
+        console.log("Dispatch metadata");
+        console.log(data);
         return data
     }
     catch (error) {
@@ -271,7 +276,7 @@ export default function Dispatch({index, project, scenario, freq, visible}){
 
 
 
-    const [plotData, updatePlotData] = useState({});
+    const [plotData, updatePlotData] = useState({datasets:[{data:[1,2,3]}]});
     //useState(layout, updateLayout) = useState({});
 
     const [showDispatch, updateShowDispatch] = useState(false);
@@ -355,17 +360,11 @@ export default function Dispatch({index, project, scenario, freq, visible}){
 
                 { visible &&
                 <div>
-                <button id="showDispatchFilters" class='button' onClick={()=> toggleDispatchFilters()}>
-                    ISO Filters
-                </button>
-                    { showConfig &&
-                        <div>TODO</div>
-                    }
 
                 <div id='dispatchChart2'>
-                    <Bar id='barChart' options={options} data={plotData}
-                    width={ document.getElementById('dispatchChart').clientWidth*0.95 }
-                    height={document.getElementById('dispatchChart').clientHeight*0.95}
+                <Bar id='barChart' options={options} data={plotData}
+                    width={300}
+                    height={900}
                     />
                 </div>
                 </div>

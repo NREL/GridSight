@@ -34,7 +34,7 @@ import * as transformations from '../lib/transformations.js';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import Dispatch from './dispatch.js';
-
+import {ResizableBox} from 'react-resizable';
 const drawerWidth = 240;
 
 const nrelTheme = createTheme({
@@ -480,13 +480,18 @@ export function App() {
             </Draggable>
             }
         </Box>
+        <Box>
             {
-              true && 
-              <Dispatch project={scenarioState.project} scenario={scenarioState.scenario}
-                freq={clockState.frequency} index={clockState.index} visible={true}
-              
-              />
+              clockState.showClock &&
+
+              <Draggable defaultPosition={clockPosition} >
+                <Box>
+                  <Dispatch project={scenarioState.project} scenario={scenarioState.scenario}
+                freq={clockState.frequency} index={clockState.index} visible={true}/>
+                </Box>
+              </Draggable>
             }
+        </Box>
         </Box>
         </Map>
         </Box>

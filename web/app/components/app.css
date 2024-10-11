@@ -21,3 +21,8 @@
 #appbar:hover {
     background-color: #82a5f352;
 }
+
+.test {
+    outline-color: #dc143c;
+    background-color: grey;
+}

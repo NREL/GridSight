@@ -15,6 +15,7 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.1",
     "@mui/material": "^6.1.1",
+    "@mui/x-charts": "^7.19.0",
     "@mui/x-date-pickers": "^7.17.0",
     "autoprefixer": "10.4.14",
     "chart.js": "^4.4.0",
@@ -37,6 +38,7 @@
     "react-dom": "^18.3.1",
     "react-draggable": "^4.4.6",
     "react-map-gl": "^7",
+    "react-resizable": "^3.0.5",
     "swr": "^2.2.0",
     "tailwindcss": "^3.4.12"
   },
