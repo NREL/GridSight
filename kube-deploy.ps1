@@ -1,4 +1,4 @@
-$id = git rev-parse --short main
+$id = git rev-parse --short $1
 
 echo "this is the git hash $id"
 #cd into web and server to run command.
