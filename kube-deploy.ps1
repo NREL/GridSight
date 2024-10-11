@@ -1,6 +1,8 @@
-$id = git rev-parse --short $1
+$id = git rev-parse --short $args[0]
 
-echo "this is the git hash $id"
+echo "deploying branch $args[0]"
+echo $args[0]
+echo $id
 #cd into web and server to run command.
 
 cd server
