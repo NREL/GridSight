@@ -35,8 +35,24 @@ Install the gridsight client into your virtual environment.
 
 To upload the demonstration data run `python upload_test_data.py`
 
-After uploading data, log in and adjust the layer styles to scale up the generation and
+## Accessing the application
+After uploading data, log in at http://localhost:3000 or http://127.0.0.1:3000
+
+The login credentials are determined by environment variables found in the docker compose file.
+
+### Default Login:
+**User:** test
+
+**Password:** test123
+
+
+After logging in, select the *Demo* project and *Demo* scenario. (Assuming you have uploaded the test data described above)
+
+You can adjust the layer styles to scale up the generation and
 transmission radius/width.
+
+![alt text](./docs/images/LayerStyling.PNG)
+
 
 ## Roadmap
 
